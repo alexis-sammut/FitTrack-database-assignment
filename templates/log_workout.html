@@ -1,0 +1,80 @@
+{% extends "base.html" %} {% block main %}
+<section id="log-workout" class="section">
+  <div class="container">
+    <h2>Log Your Workout</h2>
+    <form
+      id="workoutForm"
+      class="data-form"
+      action="{{ url_for('log_workout_page') }}"
+      method="POST"
+    >
+      <div class="form-group">
+        <label for="workoutType">Select Type of Workout:</label>
+        <select id="workoutType" name="workoutType" required>
+          <option value="">--Select a Workout--</option>
+          <option value="Running">Running</option>
+          <option value="Walking">Walking</option>
+          <option value="Cycling">Cycling</option>
+          <option value="Yoga">Yoga</option>
+          <option value="Strength Training">Strength Training</option>
+          <option value="HIIT">HIIT</option>
+          <option value="Rowing">Rowing</option>
+          <option value="Pilates">Pilates</option>
+          <option value="Swimming">Swimming</option>
+          <option value="Hiking">Hiking</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="duration">Duration (minutes):</label>
+        <input type="number" id="duration" name="duration" min="1" required>
+      </div>
+
+      <div id="dynamicWorkoutFields">
+        <div class="form-group" id="distanceGroup" style="display: none">
+          <label for="distance">Distance (km):</label>
+          <input
+            type="number"
+            id="distance"
+            name="distance"
+            step="0.1"
+            min="0.1"
+         >
+        </div>
+        <div class="form-group" id="paceGroup" style="display: none">
+          <label>Pace (min/km):</label>
+          <p id="paceDisplay" class="calculated-value"></p>
+          <input type="hidden" id="pace" name="pace">
+        </div>
+        <div class="form-group" id="intensityGroup" style="display: none">
+          <label for="intensity">Intensity:</label>
+          <select id="intensity" name="intensity">
+            <option value="Low">Low</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="High">High</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" id="calsGroup" style="display: none">
+        <label>Estimated Calories Burnt:</label>
+        <p id="estimatedCaloriesDisplay" class="calculated-value"></p>
+        <input type="hidden" id="estimatedCalories" name="estimatedCalories">
+        <p class="disclaimer">
+          <strong>Disclaimer:</strong>
+          <br>
+          This is an estimate based on an average healthy 70kg human being , and
+          can vary significantly from person to person. For more accurate
+          results, consider using a fitness tracker or a calculator that
+          incorporates more personal data.
+        </p>
+      </div>
+
+      <button type="submit" class="button">Log Workout</button>
+      <button type="button" id="resetForm" class="button secondary-button">
+        Reset Form
+      </button>
+    </form>
+  </div>
+</section>
+{% endblock %}

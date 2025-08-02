@@ -1,0 +1,107 @@
+{% extends "base.html" %} {% block main %}
+<section id="log-meal" class="section">
+  <div class="container">
+    <h2>Log Your Meal</h2>
+    <form
+      class="data-form"
+      id="mealForm"
+      action="{{ url_for('log_meal_page') }}"
+      method="POST"
+    >
+      <input type="hidden" name="mealData" id="mealData">
+      <div id="foodEntriesContainer">
+        <div class="food-entry-row">
+          <div class="form-group">
+            <label for="meal-name">Meal Name</label>
+            <input
+              type="text"
+              id="meal-name"
+              name="meal-name"
+              placeholder="e.g, Lunch"
+           >
+            <label for="foodName1">Food Name</label>
+            <input
+              type="text"
+              id="foodName1"
+              name="foodName[]"
+              placeholder="e.g., Chicken Breast"
+              required
+           >
+          </div>
+          <div class="form-group food-quantity-group">
+            <label for="foodQuantity1">Quantity (g)</label>
+            <input
+              type="number"
+              id="foodQuantity1"
+              name="foodQuantity[]"
+              placeholder="100"
+              min="1"
+           >
+          </div>
+        </div>
+      </div>
+      <p id="addFieldError"></p>
+      <button type="button" class="add-item-button" id="addFoodItemBtn">
+        +
+      </button>
+      <div class="nutrition-results">
+        <div class="nutrition-details"></div>
+      </div>
+
+      <div class="form-group">
+        <button
+          type="button"
+          id="getNutritionButton"
+          class="button secondary-button"
+        >
+          Get Nutritional Data
+        </button>
+        <button type="button" id="resetForm" class="button secondary-button">
+          Reset Form
+        </button>
+        <div id="loader" class="spinner"></div>
+        <div id="nutritionTableContainer" class="table-responsive-container">
+          <h3>Nutrition Summary</h3>
+          <table class="nutrition-table">
+            <thead>
+              <tr>
+                <th scope="col">Nutrient</th>
+                <th scope="col">Amount (g)</th>
+                <th scope="col">Fat Total (g)</th>
+                <th scope="col">Saturated Fat (g)</th>
+                <th scope="col">Carbohydrates Total (g)</th>
+                <th scope="col">Fiber (g)</th>
+                <th scope="col">Sugar (g)</th>
+                <th scope="col">Sodium (mg)</th>
+                <th scope="col">Potassium (mg)</th>
+                <th scope="col">Cholesterol (mg)</th>
+              </tr>
+            </thead>
+            <tbody id="nutritionTable">
+              <tr class="total-row">
+                <td>Total</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button
+          id="logMealButton"
+          type="submit"
+          class="button"
+          style="display: none"
+        >
+          Log Meal
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

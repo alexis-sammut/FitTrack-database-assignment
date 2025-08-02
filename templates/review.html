@@ -1,0 +1,536 @@
+{% extends "base.html" %} {% block main %}
+
+<!-- Script block: injects session data into JS variables via Flask -->
+
+<script>
+  const workoutsData = {{ workouts | tojson }};
+  const mealsData = {{ meals | tojson }};
+</script>
+
+<section id="stats-overview" class="section">
+  <div class="container">
+    <h2 class="review-headers">Stats Overview</h2>
+    <div class="stats-overview-grid">
+      <div class="stats-column">
+        <h3 class="review-headers">Workout Stats</h3>
+        <div class="stats-grid">
+          <div class="stat-box session-colour">
+            <p>Workouts Logged</p>
+            <span id="total-workouts" class="stat-value">0</span>
+          </div>
+          <div class="stat-box cals-colour">
+            <p>Total Calories</p>
+            <div class="data">
+              <span id="total-calories-burned" class="stat-value">0</span
+              ><span class="unit">kcal</span>
+            </div>
+          </div>
+          <div class="stat-box minute-colour">
+            <p>Total Minutes</p>
+            <div class="data">
+              <span id="total-workout-minutes" class="stat-value">0</span
+              ><span class="unit">min</span>
+            </div>
+          </div>
+          <div class="stat-box cals-colour">
+            <p>Average Calories per Workout</p>
+            <div class="data">
+              <span id="avg-calories-burned" class="stat-value">0</span
+              ><span class="unit">kcal</span>
+            </div>
+          </div>
+          <div class="stat-box minute-colour">
+            <p>Average Minutes per Workout</p>
+            <div class="data">
+              <span id="avg-workout-minutes" class="stat-value">0</span
+              ><span class="unit">min</span>
+            </div>
+          </div>
+        </div>
+        <h4 class="review-headers">
+          <button type="button" class="show-more-button">
+            Show stats per workout &gt;
+          </button>
+        </h4>
+        <div id="workout-stats">
+          <h4 class="review-headers">
+            <button type="button" class="show-more-button">
+              Running Stats &gt;
+            </button>
+          </h4>
+          <div class="stats-grid hidden" id="runningStats">
+            <div class="stat-box session-colour">
+              <p>Runs Logged</p>
+              <span id="total-runs" class="stat-value">0</span>
+            </div>
+            <div class="stat-box cals-colour">
+              <p>Average Calories per Run</p>
+              <div class="data">
+                <span id="avg-calories-burned-runs" class="stat-value">0</span
+                ><span class="unit">kcal</span>
+              </div>
+            </div>
+            <div class="stat-box minute-colour">
+              <p>Average Minutes per Run</p>
+              <div class="data">
+                <span id="avg-runs-minutes" class="stat-value">0</span
+                ><span class="unit">min</span>
+              </div>
+            </div>
+            <div class="stat-box distance-colour">
+              <p>Average Distance per Run</p>
+              <div class="data">
+                <span id="avg-runs-distance" class="stat-value">0</span
+                ><span class="unit">km</span>
+              </div>
+            </div>
+            <div class="stat-box pace-colour">
+              <p>Average Pace per Run</p>
+              <div class="data">
+                <span id="avg-runs-pace" class="stat-value">--</span
+                ><span class="unit">min/km</span>
+              </div>
+            </div>
+          </div>
+          <h4 class="review-headers">
+            <button type="button" class="show-more-button">
+              Walking Stats &gt;
+            </button>
+          </h4>
+          <div class="stats-grid hidden" id="walkingStats">
+            <div class="stat-box session-colour">
+              <p>Walks Logged</p>
+              <span id="total-walks" class="stat-value">0</span>
+            </div>
+            <div class="stat-box cals-colour">
+              <p>Average Calories per Walk</p>
+              <div class="data">
+                <span id="avg-calories-burned-walks" class="stat-value">0</span
+                ><span class="unit">kcal</span>
+              </div>
+            </div>
+            <div class="stat-box minute-colour">
+              <p>Average Minutes per Walk</p>
+              <div class="data">
+                <span id="avg-walks-minutes" class="stat-value">0</span
+                ><span class="unit">min</span>
+              </div>
+            </div>
+            <div class="stat-box distance-colour">
+              <p>Average Distance per Walk</p>
+              <div class="data">
+                <span id="avg-walks-distance" class="stat-value">0</span
+                ><span class="unit">km</span>
+              </div>
+            </div>
+            <div class="stat-box pace-colour">
+              <p>Average Pace per Walk</p>
+              <div class="data">
+                <span id="avg-walks-pace" class="stat-value">--</span
+                ><span class="unit">min/km</span>
+              </div>
+            </div>
+          </div>
+          <h4 class="review-headers">
+            <button type="button" class="show-more-button">
+              Cycling Stats &gt;
+            </button>
+          </h4>
+          <div class="stats-grid hidden" id="cyclingStats">
+            <div class="stat-box session-colour">
+              <p>Cycles Logged</p>
+              <span id="total-cycles" class="stat-value">0</span>
+            </div>
+            <div class="stat-box cals-colour">
+              <p>Average Calories per Cycle</p>
+              <div class="data">
+                <span id="avg-calories-burned-cycles" class="stat-value">0</span
+                ><span class="unit">kcal</span>
+              </div>
+            </div>
+            <div class="stat-box minute-colour">
+              <p>Average Minutes per Cycle</p>
+              <div class="data">
+                <span id="avg-cycles-minutes" class="stat-value">0</span
+                ><span class="unit">min</span>
+              </div>
+            </div>
+            <div class="stat-box distance-colour">
+              <p>Average Distance per Cycle</p>
+              <div class="data">
+                <span id="avg-cycles-distance" class="stat-value">0</span
+                ><span class="unit">km</span>
+              </div>
+            </div>
+            <div class="stat-box pace-colour">
+              <p>Average Pace per Cycle</p>
+              <div class="data">
+                <span id="avg-cycles-pace" class="stat-value">--</span
+                ><span class="unit">min/km</span>
+              </div>
+            </div>
+          </div>
+          <h4 class="review-headers">
+            <button type="button" class="show-more-button">
+              Rowing Stats &gt;
+            </button>
+          </h4>
+          <div class="stats-grid hidden" id="rowingStats">
+            <div class="stat-box session-colour">
+              <p>Rowing Sessions Logged</p>
+              <span id="total-rowing" class="stat-value">0</span>
+            </div>
+            <div class="stat-box cals-colour">
+              <p>Average Calories per Rowing Session</p>
+              <div class="data">
+                <span id="avg-calories-burned-rowing" class="stat-value">0</span
+                ><span class="unit">kcal</span>
+              </div>
+            </div>
+            <div class="stat-box minute-colour">
+              <p>Average Minutes per Rowing Session</p>
+              <div class="data">
+                <span id="avg-rowing-minutes" class="stat-value">0</span
+                ><span class="unit">min</span>
+              </div>
+            </div>
+            <div class="stat-box intensity-colour">
+              <p>Average Intensity per Rowing Session</p>
+              <span id="avg-rowing-intensity" class="stat-value">0</span>
+            </div>
+          </div>
+          <h4 class="review-headers">
+            <button type="button" class="show-more-button">
+              Swimming Stats &gt;
+            </button>
+          </h4>
+          <div class="stats-grid hidden" id="swimmingStats">
+            <div class="stat-box session-colour">
+              <p>Swims Logged</p>
+              <span id="total-swims" class="stat-value">0</span>
+            </div>
+            <div class="stat-box cals-colour">
+              <p>Average Calories per Swim</p>
+              <div class="data">
+                <span id="avg-calories-burned-swims" class="stat-value">0</span
+                ><span class="unit">kcal</span>
+              </div>
+            </div>
+            <div class="stat-box minute-colour">
+              <p>Average Minutes per Swim</p>
+              <div class="data">
+                <span id="avg-swims-minutes" class="stat-value">0</span
+                ><span class="unit">min</span>
+              </div>
+            </div>
+            <div class="stat-box intensity-colour">
+              <p>Average Intensity per Swim</p>
+              <span id="avg-swims-intensity" class="stat-value">0</span>
+            </div>
+          </div>
+          <h4 class="review-headers">
+            <button type="button" class="show-more-button">
+              Hiking Stats &gt;
+            </button>
+          </h4>
+          <div class="stats-grid hidden" id="hikingStats">
+            <div class="stat-box session-colour">
+              <p>Hikes Logged</p>
+              <span id="total-hikes" class="stat-value">0</span>
+            </div>
+            <div class="stat-box cals-colour">
+              <p>Average Calories per Hike</p>
+              <div class="data">
+                <span id="avg-calories-burned-hikes" class="stat-value">0</span
+                ><span class="unit">kcal</span>
+              </div>
+            </div>
+            <div class="stat-box minute-colour">
+              <p>Average Minutes per Hike</p>
+              <div class="data">
+                <span id="avg-hikes-minutes" class="stat-value">0</span
+                ><span class="unit">min</span>
+              </div>
+            </div>
+            <div class="stat-box intensity-colour">
+              <p>Average Intensity per Hike</p>
+              <span id="avg-hikes-intensity" class="stat-value">0</span>
+            </div>
+          </div>
+          <h4 class="review-headers">
+            <button type="button" class="show-more-button">
+              Yoga Stats &gt;
+            </button>
+          </h4>
+          <div class="stats-grid hidden" id="yogaStats">
+            <div class="stat-box session-colour">
+              <p>Yoga Sessions Logged</p>
+              <span id="total-yoga" class="stat-value">0</span>
+            </div>
+            <div class="stat-box cals-colour">
+              <p>Average Calories per Yoga Session</p>
+              <div class="data">
+                <span id="avg-calories-burned-yoga" class="stat-value">0</span
+                ><span class="unit">kcal</span>
+              </div>
+            </div>
+            <div class="stat-box minute-colour">
+              <p>Average Minutes per Yoga Session</p>
+              <div class="data">
+                <span id="avg-yoga-minutes" class="stat-value">0</span
+                ><span class="unit">min</span>
+              </div>
+            </div>
+            <div class="stat-box intensity-colour">
+              <p>Average Intensity per Yoga Session</p>
+              <span id="avg-yoga-intensity" class="stat-value">0</span>
+            </div>
+          </div>
+          <h4 class="review-headers">
+            <button type="button" class="show-more-button">
+              Pilates Stats &gt;
+            </button>
+          </h4>
+          <div class="stats-grid hidden" id="pilatesStats">
+            <div class="stat-box session-colour">
+              <p>Pilates Sessions Logged</p>
+              <span id="total-pilates" class="stat-value">0</span>
+            </div>
+            <div class="stat-box cals-colour">
+              <p>Average Calories per Pilates Session</p>
+              <div class="data">
+                <span id="avg-calories-burned-pilates" class="stat-value"
+                  >0</span
+                ><span class="unit">kcal</span>
+              </div>
+            </div>
+            <div class="stat-box minute-colour">
+              <p>Average Minutes per Pilates Session</p>
+              <div class="data">
+                <span id="avg-pilates-minutes" class="stat-value">0</span
+                ><span class="unit">min</span>
+              </div>
+            </div>
+            <div class="stat-box intensity-colour">
+              <p>Average Intensity per Pilates Session</p>
+              <span id="avg-pilates-intensity" class="stat-value">0</span>
+            </div>
+          </div>
+          <h4 class="review-headers">
+            <button type="button" class="show-more-button">
+              HIIT Stats &gt;
+            </button>
+          </h4>
+          <div class="stats-grid hidden" id="hiitStats">
+            <div class="stat-box session-colour">
+              <p>HIITs Logged</p>
+              <span id="total-hiits" class="stat-value">0</span>
+            </div>
+            <div class="stat-box cals-colour">
+              <p>Average Calories per HIIT</p>
+              <div class="data">
+                <span id="avg-calories-burned-hiits" class="stat-value">0</span
+                ><span class="unit">kcal</span>
+              </div>
+            </div>
+            <div class="stat-box minute-colour">
+              <p>Average Minutes per HIIT</p>
+              <div class="data">
+                <span id="avg-hiits-minutes" class="stat-value">0</span
+                ><span class="unit">min</span>
+              </div>
+            </div>
+            <div class="stat-box intensity-colour">
+              <p>Average Intensity per HIIT</p>
+              <span id="avg-hiits-intensity" class="stat-value">0</span>
+            </div>
+          </div>
+          <h4 class="review-headers">
+            <button type="button" class="show-more-button">
+              Strength Training Stats &gt;
+            </button>
+          </h4>
+          <div class="stats-grid hidden" id="strengthStats">
+            <div class="stat-box session-colour">
+              <p>Strength Trainings Logged</p>
+              <span id="total-strength" class="stat-value">0</span>
+            </div>
+            <div class="stat-box cals-colour">
+              <p>Average Calories per Strength Training</p>
+              <div class="data">
+                <span id="avg-calories-burned-strength" class="stat-value"
+                  >0</span
+                ><span class="unit">kcal</span>
+              </div>
+            </div>
+            <div class="stat-box minute-colour">
+              <p>Average Minutes per Strength Training</p>
+              <div class="data">
+                <span id="avg-strength-minutes" class="stat-value">0</span
+                ><span class="unit">min</span>
+              </div>
+            </div>
+            <div class="stat-box intensity-colour">
+              <p>Average Intensity per Strength Training</p>
+              <span id="avg-strenght-intensity" class="stat-value">0</span>
+            </div>
+          </div>
+        </div>
+        <h3 class="review-headers">Meal Stats</h3>
+        <div class="stats-grid-meal">
+          <div class="stat-box amount-colour">
+            <p>Total Amount</p>
+            <div class="data">
+              <span id="logged-total" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box fat-colour">
+            <p>Total Fat</p>
+            <div class="data">
+              <span id="logged-total-fat" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box fat-colour">
+            <p>Total Saturated Fat</p>
+            <div class="data">
+              <span id="logged-total-saturated-fat" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box carbs-colour">
+            <p>Total Carbs</p>
+            <div class="data">
+              <span id="logged-total-carbs" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box carbs-colour">
+            <p>Total Fiber</p>
+            <div class="data">
+              <span id="logged-total-fiber" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box carbs-colour">
+            <p>Total Sugar</p>
+            <div class="data">
+              <span id="logged-total-sugar" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box micronutrients-colour">
+            <p>Total Sodium</p>
+            <div class="data">
+              <span id="logged-total-sodium" class="stat-value">0</span
+              ><span class="unit">mg</span>
+            </div>
+          </div>
+          <div class="stat-box micronutrients-colour">
+            <p>Total Potassium</p>
+            <div class="data">
+              <span id="logged-total-potassium" class="stat-value">0</span
+              ><span class="unit">mg</span>
+            </div>
+          </div>
+          <div class="stat-box micronutrients-colour">
+            <p>Total Cholesterol</p>
+            <div class="data">
+              <span id="logged-total-cholesterol" class="stat-value">0</span
+              ><span class="unit">mg</span>
+            </div>
+          </div>
+        </div>
+        <div class="stats-grid-meal">
+          <div class="stat-box amount-colour">
+            <p>Average Amount</p>
+            <div class="data">
+              <span id="avg-amount" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box fat-colour">
+            <p>Average Fat</p>
+            <div class="data">
+              <span id="avg-fat" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box fat-colour">
+            <p>Average Saturated Fat</p>
+            <div class="data">
+              <span id="avg-saturated-fat" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box carbs-colour">
+            <p>Average Carbs</p>
+            <div class="data">
+              <span id="avg-carbs" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box carbs-colour">
+            <p>Average Fiber</p>
+            <div class="data">
+              <span id="avg-fiber" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box carbs-colour">
+            <p>Average Sugar</p>
+            <div class="data">
+              <span id="avg-sugar" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box micronutrients-colour">
+            <p>Average Sodium</p>
+            <div class="data">
+              <span id="avg-sodium" class="stat-value">0</span
+              ><span class="unit">mg</span>
+            </div>
+          </div>
+          <div class="stat-box micronutrients-colour">
+            <p>Average Potassium</p>
+            <div class="data">
+              <span id="avg-potassium" class="stat-value">0</span
+              ><span class="unit">mg</span>
+            </div>
+          </div>
+          <div class="stat-box micronutrients-colour">
+            <p>Average Cholesterol</p>
+            <div class="data">
+              <span id="avg-cholesterol" class="stat-value">0</span
+              ><span class="unit">mg</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="logged-workouts" class="section">
+  <div class="container">
+    <h2 class="review-headers">Logged Workouts</h2>
+    <div id="workoutList" class="data-list">
+      <p class="no-data-message">
+        No workouts logged yet. <a href="/log_workout">Log one now!</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="logged-meals" class="section">
+  <div class="container">
+    <h2>Logged Meals</h2>
+    <div id="mealList" class="data-list">
+      <p class="no-data-message">
+        No meals logged yet. <a href="/log_meal">Log one now!</a>
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

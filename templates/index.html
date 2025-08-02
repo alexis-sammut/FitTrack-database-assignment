@@ -1,0 +1,100 @@
+{% extends "base.html" %} {% block main %}
+<section id="hero" class="hero">
+  <div class="container">
+    <h2>Welcome to FitTrack!</h2>
+    <p>
+      Your ultimate companion for tracking workouts and meals, and achieving
+      your fitness goals.
+    </p>
+    <a href="/log_workout" class="button">Start Tracking Your Workout</a>
+    <a href="/log_meal" class="button secondary-button">Log Your Meal</a>
+  </div>
+</section>
+
+<section id="benefits" class="section">
+  <div class="container">
+    <h2>Benefits of Tracking Your Fitness</h2>
+    <div class="benefit-grid">
+      <div class="benefit-card">
+        <h3>Stay Motivated</h3>
+        <p>
+          See your progress over time and stay inspired to hit new milestones.
+        </p>
+      </div>
+      <div class="benefit-card">
+        <h3>Understand Your Habits</h3>
+        <p>
+          Gain insights into your eating and exercise patterns for better
+          decision-making.
+        </p>
+      </div>
+      <div class="benefit-card">
+        <h3>Achieve Goals Faster</h3>
+        <p>
+          With clear data, you can optimize your routine for quicker results.
+        </p>
+      </div>
+      <div class="benefit-card">
+        <h3>Improve Health</h3>
+        <p>
+          Consistent tracking leads to healthier choices and a better lifestyle.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="blog-preview" class="section">
+  <div class="container">
+    <h2>Helpful Ressources</h2>
+    <div class="benefit-grid">
+      <div class="benefit-card">
+        <a href="https://www.bornfitness.com/" target="_blank">
+          <img
+            src="{{ url_for('static', filename='images/born_fitness.png')}}"
+            alt="Born Fitness logo"
+         >
+          <p>
+            Simple, no-nonsense advice on fitness and food that actually fits
+            your life.
+          </p>
+        </a>
+      </div>
+
+      <div class="benefit-card">
+        <a href="https://www.keepitsimpelle.com/" target="_blank">
+          <img
+            src="{{ url_for('static', filename='images/keep_simpelle.png')}}"
+            alt="keep it simpElle logo"
+         >
+          <p>
+            Real talk on fitness, wellness, and showing up—especially for women.
+          </p>
+        </a>
+      </div>
+
+      <div class="benefit-card">
+        <a href="https://www.nerdfitness.com/" target="_blank">
+          <img
+            src="{{ url_for('static', filename='images/nerd_fitness.png')}}"
+            alt="Nerd Fitness logo"
+         >
+          <p>
+            Fitness for nerds and beginners—fun, friendly, and super relatable.
+          </p>
+        </a>
+      </div>
+
+      <div class="benefit-card">
+        <a href="https://www.wellandgood.com/" target="_blank">
+          <img
+            src="{{ url_for('static', filename='images/well_+_good.png')}}"
+            alt="well+good logo"
+         >
+          <p>Trendy, expert-backed tips on fitness, food, and feeling good.</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

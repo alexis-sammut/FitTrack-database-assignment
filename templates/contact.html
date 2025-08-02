@@ -1,0 +1,42 @@
+{% extends "base.html" %} {% block main %}
+<section id="contact" class="section">
+  <div class="container">
+    <h2 id="formTitle">Contact Us</h2>
+    <div class="data-form">
+      <p id="formIntro" class="form-intro">
+        Have questions, feedback, or suggestions? I'd love to hear from you!
+      </p>
+      <form id="contactForm">
+        <div class="form-group">
+          <label for="name">Your Name:</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Your Email:</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="message">Your Message:</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="button">Send Message</button>
+        <button type="button" id="resetForm" class="button secondary-button">
+          Reset Form
+        </button>
+      </form>
+    </div>
+    <p class="social-links">
+      You can find me on
+      <a
+        href="https://www.linkedin.com/in/alexis-sammut-217b22209"
+        target="_blank"
+      >
+        Linkedin</a
+      >
+      <br>
+      Or you can
+      <a href="mailto:alexis.sammut26@gmail.com">email-me</a> directly
+    </p>
+  </div>
+</section>
+{% endblock %}
