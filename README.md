@@ -1,5 +1,7 @@
 FitTrack - This is the assignment for the Pyhton module
+
 URL : https://fittrack-python-assignement.onrender.com/
+GIT Repository : https://github.com/alexis-sammut/FitTrack-Python-assignement
 
 The app is made of 5 pages:
 - Home page
