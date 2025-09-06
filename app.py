@@ -1,12 +1,32 @@
 from flask import Flask
 import os
+from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv
+
+# Load environment variables from the .env file
+load_dotenv()
 
 app = Flask(__name__)
 
 # A secret key is required for using 'sessions' in Flask
 app.secret_key = os.urandom(24)
 
+# Configure the database
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('LOCAL_DATABASE_URL')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Initialize the database object
+db = SQLAlchemy(app)
+
 import routes
+import models # We'll import the models file here
+
+# This is a good place to call db.create_all() to create your tables.
+# You only need to run this once. For development, you can run it
+# directly in your app.py, but for production, you would use a migration
+# tool like Flask-Migrate.
+with app.app_context():
+    db.create_all()
 
 if __name__ == '__main__':
     app.run(debug=True)
