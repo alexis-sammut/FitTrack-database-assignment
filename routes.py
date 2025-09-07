@@ -88,3 +88,8 @@ def delete_item():
 def contact_page():
     """Renders the contact page."""
     return render_template('contact.html')
+
+@app.route('/authentification')
+def authentification_page():
+    """Renders the authentification page."""
+    return render_template('authentification.html')

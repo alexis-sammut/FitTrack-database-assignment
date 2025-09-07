@@ -202,6 +202,91 @@ main {
   color: #2c3e50;
 }
 
+/* Auhtentification page */
+
+.tab-container {
+  display: flex;
+  width: 100%;
+  background-color: #f9f9f9;
+  overflow: hidden;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0px;
+  
+  background-color: #f9f9f9;
+  border-radius: 10px 10px 0 0;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 15px 20px;
+  width: 100%;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #2c3e50;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  position: relative;
+  border-radius: 0;
+}
+
+.tab-button.active {
+  background-color: transparent;
+  z-index: 1;
+  border: #2c3e50 2px solid;
+  border-bottom: 0
+}
+
+.tab-button.active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  border-radius: 8px 8px 0 0;
+  transform: translateY(10px);
+  z-index: -1;
+}
+
+.tab-button:first-child.active {
+  border-radius: 8px 0 0 0;
+}
+
+.tab-button:last-child.active {
+  border-radius: 0 8px 0 0;
+}
+
+.tab-button:not(.active) {
+  background-color: #e0e0e0;
+  color: #2c3e5075 ;
+  border-bottom: #2c3e50 2px solid;
+}
+
+.tab-button:not(.active):hover {
+  background-color: #d0d0d0;
+
+}
+
+.hidden-form {
+  display: none;
+}
+
+.active-form {
+  display: block;
+}
+
+.form-container{
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: #f9f9f9;
+  border-radius: 0 0 10px 10px;
+}
+
 /* Log workout page */
 .data-form {
   max-width: 800px;
@@ -228,6 +313,7 @@ main {
 .form-group input[type="text"],
 .form-group input[type="number"],
 .form-group input[type="email"],
+.form-group input[type="password"],
 .form-group textarea {
   width: calc(100% - 24px);
   padding: 12px;
@@ -276,7 +362,7 @@ main {
 }
 
 /* Log meal page */
-.food-entry-row {
+.form-entry-row {
   display: flex;
   gap: 15px;
   margin-bottom: 15px;
@@ -284,13 +370,13 @@ main {
   flex-wrap: wrap;
 }
 
-.food-entry-row .form-group {
+.form-entry-row .form-group {
   flex: 1;
   min-width: 120px;
   margin-bottom: 0;
 }
 
-.food-entry-row .form-group input {
+.form-entry-row .form-group input {
   width: 80%;
 }
 
@@ -692,12 +778,12 @@ footer {
     font-size: 1rem;
   }
 
-  .food-entry-row {
+  .form-entry-row {
     flex-direction: column;
     gap: 10px;
   }
-  .food-entry-row .form-group,
-  .food-entry-row .food-quantity-group {
+  .form-entry-row .form-group,
+  .form-entry-row .form-secondary-group {
     min-width: unset;
     width: 100%;
     flex: 0 0 auto;

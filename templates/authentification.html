@@ -1,0 +1,70 @@
+{% extends "base.html" %} {% block main %}
+<section id="log-workout" class="section">
+  <div class="container">
+      <div class="tab-container">
+        <button id="loginTab" class="tab-button active">Log In</button>
+        <button id="createAccountTab" class="tab-button">
+          Create Account
+        </button>
+      </div>
+      <div class="form-container">
+        <form id="loginForm" class="active-form" action="" method="">
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <input
+              type="email"
+              id="login-email"
+              name="email"
+              required
+              autocomplete="email"
+            />
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input
+              type="password"
+              id="login-password"
+              name="password"
+              required
+              autocomplete="current-password"
+            />
+          </div>
+          <button type="submit" class="button">Log In</button>
+        </form>
+
+        <form id="createAccountForm" class="hidden-form" action="" method="">
+          <div class="form-entry-row">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" required />
+            </div>
+            <div class="form-group">
+              <label for="create-account-email">Email Address</label>
+              <input
+                type="email"
+                id="create-account-email"
+                name="email"
+                required
+                autocomplete="email"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="signup-password">Password</label>
+            <input
+              type="password"
+              id="signup-password"
+              name="password"
+              required
+              autocomplete="new-password"
+            />
+          </div>
+
+          <button type="submit" class="button secondary-button">
+            Create Account
+          </button>
+        </form>
+      </div>
+  </div>
+</section>
+{% endblock %}
