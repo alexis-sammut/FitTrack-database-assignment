@@ -1,9 +1,10 @@
-from flask import render_template, request, redirect, url_for, session, jsonify
-from app import app 
+from flask import render_template, request, redirect, url_for, session, jsonify, flash
+from app import app, db
+from models import User
 import json
 import time
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     """Renders the home page."""
     return render_template('index.html')
@@ -58,7 +59,7 @@ def log_meal_page():
         
     return render_template('log_meal.html')
 
-@app.route('/review')
+@app.route('/review', methods=['GET'])
 def review_page():
     """Renders the review page, getting logged workouts and meals from the session."""
     workouts = session.get('workouts', [])
@@ -84,12 +85,62 @@ def delete_item():
     return jsonify({'success': False, 'message': 'Invalid request.'})
 
 
-@app.route('/contact')
+@app.route('/contact', methods=['GET'])
 def contact_page():
     """Renders the contact page."""
     return render_template('contact.html')
 
-@app.route('/authentification')
+@app.route('/authentification', methods=['GET'])
 def authentification_page():
     """Renders the authentification page."""
     return render_template('authentification.html')
+
+@app.route('/register_user', methods=['POST'])
+def register_user():
+    """
+    Handles the registration of a new user.
+    Checks for existing email or username before adding to the database.
+    """
+    name = request.form.get('name')
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    # Query the database to check if a user with this email already exists
+    existing_user_by_email = User.query.filter_by(email=email).first()
+    
+    if existing_user_by_email:
+        flash("An account with that email already exists. Please log in or use a different email.", "error")
+        return redirect(url_for('authentification_page', show_register='true'))
+    
+    # In a real app, you would hash the password for security.
+    # For now, we'll use a placeholder.
+    hashed_password = password # Placeholder for now
+
+    new_user = User(name=name, email=email, password=hashed_password)
+    
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+        # Log the user in after successful registration
+        session['user_id'] = new_user.id
+        return redirect(url_for('index'))
+    except Exception as e:
+        db.session.rollback()
+        flash("An error occurred during registration. Please try again.", "error")
+        return redirect(url_for('authentification_page', show_register='true'))
+    
+@app.route('/login_user', methods=['POST'])
+def login_user():
+    """Handles user login and sets up the session."""
+    email = request.form.get('email')
+    password = request.form.get('password')
+    
+    user = User.query.filter_by(email=email).first()
+
+    if user and user.password == password: # In a real app, you would use bcrypt.check_password_hash()
+        # Log the user in by storing their ID in the session
+        session['user_id'] = user.id
+        return redirect(url_for('index')) 
+    else:
+        flash("Login failed. Please check your email and password.", "error")
+        return redirect(url_for('authentification_page'))

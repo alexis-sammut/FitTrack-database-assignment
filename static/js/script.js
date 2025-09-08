@@ -980,4 +980,37 @@ document.addEventListener("DOMContentLoaded", () => {
       ).innerHTML = `<p>Thank you ${nameEntered} for sharing your thoughts!</p>`;
     });
   }
+
+  // Authentification page
+  // Referencing items
+  const loginTab = document.getElementById("loginTab");
+  const createAccountTab = document.getElementById("createAccountTab");
+  const loginForm = document.getElementById("loginForm");
+  const createAccountForm = document.getElementById("createAccountForm");
+
+  // Function to switch between login and create account forms
+  function formSwitcher () {
+    loginTab.classList.toggle('active')
+    createAccountTab.classList.toggle('active')
+    loginForm.classList.toggle('hidden-form')
+    createAccountForm.classList.toggle('hidden-form')
+  }
+
+    // Add event listeners for the tab buttons
+  if(loginTab && createAccountTab){
+    loginTab.addEventListener('click',formSwitcher)
+    createAccountTab.addEventListener('click',formSwitcher)
+  }
+
+
+  // Check the URL for a parameter to automatically switch to the Create Account form
+  const urlParams = new URLSearchParams(window.location.search);
+  const showRegisterForm = urlParams.get('show_register');
+
+  if (showRegisterForm === 'true') {
+    if (loginForm.classList.contains('hidden-form') === false) {
+      formSwitcher();
+    }
+  }
+
 });

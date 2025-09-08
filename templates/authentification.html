@@ -3,12 +3,12 @@
   <div class="container">
       <div class="tab-container">
         <button id="loginTab" class="tab-button active">Log In</button>
-        <button id="createAccountTab" class="tab-button">
+        <button id="createAccountTab" class="tab-button ">
           Create Account
         </button>
       </div>
       <div class="form-container">
-        <form id="loginForm" class="active-form" action="" method="">
+        <form id="loginForm" action="{{ url_for('login_user') }}" method=POST"">
           <div class="form-group">
             <label for="login-email">Email Address</label>
             <input
@@ -32,7 +32,7 @@
           <button type="submit" class="button">Log In</button>
         </form>
 
-        <form id="createAccountForm" class="hidden-form" action="" method="">
+        <form id="createAccountForm" class="hidden-form" action="{{ url_for('register_user') }}" method="POST">
           <div class="form-entry-row">
             <div class="form-group">
               <label for="name">Name</label>
@@ -59,7 +59,15 @@
               autocomplete="new-password"
             />
           </div>
-
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for message in messages %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
           <button type="submit" class="button secondary-button">
             Create Account
           </button>
