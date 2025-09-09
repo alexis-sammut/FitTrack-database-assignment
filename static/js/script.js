@@ -989,28 +989,119 @@ document.addEventListener("DOMContentLoaded", () => {
   const createAccountForm = document.getElementById("createAccountForm");
 
   // Function to switch between login and create account forms
-  function formSwitcher () {
-    loginTab.classList.toggle('active')
-    createAccountTab.classList.toggle('active')
-    loginForm.classList.toggle('hidden-form')
-    createAccountForm.classList.toggle('hidden-form')
+  function formSwitcher() {
+    loginTab.classList.toggle("active");
+    createAccountTab.classList.toggle("active");
+    loginForm.classList.toggle("hidden-form");
+    createAccountForm.classList.toggle("hidden-form");
   }
 
-    // Add event listeners for the tab buttons
-  if(loginTab && createAccountTab){
-    loginTab.addEventListener('click',formSwitcher)
-    createAccountTab.addEventListener('click',formSwitcher)
+  // Add event listeners for the tab buttons
+  if (loginTab && createAccountTab) {
+    loginTab.addEventListener("click", formSwitcher);
+    createAccountTab.addEventListener("click", formSwitcher);
   }
-
 
   // Check the URL for a parameter to automatically switch to the Create Account form
   const urlParams = new URLSearchParams(window.location.search);
-  const showRegisterForm = urlParams.get('show_register');
+  const showRegisterForm = urlParams.get("show_register");
 
-  if (showRegisterForm === 'true') {
-    if (loginForm.classList.contains('hidden-form') === false) {
+  if (showRegisterForm === "true") {
+    if (loginForm.classList.contains("hidden-form") === false) {
       formSwitcher();
     }
   }
 
+  // Account page
+  // Referencing items
+  const changePasswordBtn = document.getElementById("changePasswordBtn");
+  const changeAccountInfoBtn = document.getElementById("changeAccountInfoBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const deleteAccountBtn = document.getElementById("deleteAccountBtn");
+
+  const passwordPopupForm = document.getElementById("popupPasswordForm");
+  const accountInfoPopupForm = document.getElementById("accountInfoPopupForm");
+  const logoutPopupForm = document.getElementById("logoutPopupForm");
+  const deleteAccountPopupForm = document.getElementById(
+    "deleteAccountPopupForm"
+  );
+
+  // A list of all pop-up forms
+  const allpopupForms = [
+    passwordPopupForm,
+    accountInfoPopupForm,
+    logoutPopupForm,
+    deleteAccountPopupForm,
+  ];
+
+  // Function to show a popup form and prevent background scrolling
+  function showPopupForm(popupForm) {
+  if (popupForm) {
+    popupForm.style.display = "flex";
+    document.body.style.overflow = "hidden";
+  }
+}
+
+  // Function to hide all popup forms and re-enable scrolling
+  function hideAllPopupForms() {
+  allpopupForms.forEach((popupForm) => {
+    if (popupForm) {
+      popupForm.style.display = "none";
+    }
+  });
+  document.body.style.overflow = "auto";
+}
+
+  // Event listeners to show the correct pop-up on button click
+  changePasswordBtn.onclick = function () {
+    showPopupForm(passwordPopupForm);
+  };
+
+  changeAccountInfoBtn.onclick = function () {
+    showPopupForm(accountInfoPopupForm);
+  };
+
+  logoutBtn.onclick = function () {
+    showPopupForm(logoutPopupForm);
+  };
+
+  deleteAccountBtn.onclick = function () {
+    showPopupForm(deleteAccountPopupForm);
+  };
+
+  // Event listener for all close buttons to hide the pop-up
+  const closeBtns = document.querySelectorAll(".close-button");
+  closeBtns.forEach((btn) => {
+    btn.onclick = function () {
+      hideAllPopupForms();
+    };
+  });
+
+  // When the user clicks anywhere outside of a popup form, close it
+  window.onclick = function (event) {
+    if (event.target.classList.contains("popup-form")) {
+      hideAllPopupForms();
+    }
+  };
+
+// Check the URL for a parameter to automatically switch to the correct popup form 
+const urlParamPopupForm = new URLSearchParams(window.location.search);
+const showForm = urlParamPopupForm.get('show_form');
+
+if (showForm) {
+    switch(showForm) {
+        case 'password':
+            showPopupForm(passwordPopupForm);
+            break;
+        case 'account':
+            showPopupForm(accountInfoPopupForm);
+            break;
+        case 'logout':
+            showPopupForm(logoutPopupForm);
+            break;
+        case 'delete':
+            showPopupForm(deleteAccountPopupForm);
+            break;
+    }
+}
 });

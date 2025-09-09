@@ -6,12 +6,16 @@ import time
 
 @app.route('/', methods=['GET'])
 def index():
+    
     """Renders the home page."""
+    
     return render_template('index.html')
 
 @app.route('/log_workout', methods=['GET', 'POST'])
 def log_workout_page():
+    
     """Handles the log workout form submission."""
+    
     if request.method == 'POST':
         # Initialize 'workouts' in session if it doesn't exist yet
         if 'workouts' not in session:
@@ -38,7 +42,9 @@ def log_workout_page():
 
 @app.route('/log_meal', methods=['GET', 'POST'])
 def log_meal_page():
+    
     """Handles the log meal form submission."""
+    
     if request.method == 'POST':
          # Initialize 'meals' in session if it doesn't exist yet
         if 'meals' not in session:
@@ -61,14 +67,18 @@ def log_meal_page():
 
 @app.route('/review', methods=['GET'])
 def review_page():
+    
     """Renders the review page, getting logged workouts and meals from the session."""
+    
     workouts = session.get('workouts', [])
     meals = session.get('meals', [])
     return render_template('review.html', workouts=workouts, meals=meals)
 
 @app.route('/delete_item', methods=['POST'])
 def delete_item():
+    
     """Handles the deletion of a logged item."""
+    
     data = request.get_json()
     item_type = data.get('item_type')
     item_id = data.get('item_id')
@@ -84,23 +94,45 @@ def delete_item():
 
     return jsonify({'success': False, 'message': 'Invalid request.'})
 
-
 @app.route('/contact', methods=['GET'])
 def contact_page():
+    
     """Renders the contact page."""
+    
     return render_template('contact.html')
 
 @app.route('/authentification', methods=['GET'])
 def authentification_page():
-    """Renders the authentification page."""
+
+    """ Renders the authentification page.
+        If the user is logged in, redirects them to the account page."""
+
+    if 'user_id' in session:
+        return redirect(url_for('account_page'))
+
     return render_template('authentification.html')
+
+@app.route('/account', methods=['GET'])
+def account_page():
+
+    """Renders the account page.
+    Retrieves user information from the database and passes it to the template.
+    Requires the user to be logged in."""
+    
+    user_id = session.get('user_id')
+    if user_id:
+        user = User.query.get(user_id)
+        if user:
+            return render_template('account.html', user=user)
+
+    return redirect(url_for('authentification_page'))
 
 @app.route('/register_user', methods=['POST'])
 def register_user():
-    """
-    Handles the registration of a new user.
-    Checks for existing email or username before adding to the database.
-    """
+    
+    """Handles the registration of a new user.
+    Checks for existing email or username before adding to the database."""
+    
     name = request.form.get('name')
     email = request.form.get('email')
     password = request.form.get('password')
@@ -112,9 +144,7 @@ def register_user():
         flash("An account with that email already exists. Please log in or use a different email.", "error")
         return redirect(url_for('authentification_page', show_register='true'))
     
-    # In a real app, you would hash the password for security.
-    # For now, we'll use a placeholder.
-    hashed_password = password # Placeholder for now
+    hashed_password = password 
 
     new_user = User(name=name, email=email, password=hashed_password)
     
@@ -131,16 +161,103 @@ def register_user():
     
 @app.route('/login_user', methods=['POST'])
 def login_user():
+    
     """Handles user login and sets up the session."""
+    
     email = request.form.get('email')
     password = request.form.get('password')
     
     user = User.query.filter_by(email=email).first()
 
-    if user and user.password == password: # In a real app, you would use bcrypt.check_password_hash()
+    if user and user.password == password: 
         # Log the user in by storing their ID in the session
         session['user_id'] = user.id
         return redirect(url_for('index')) 
     else:
         flash("Login failed. Please check your email and password.", "error")
         return redirect(url_for('authentification_page'))
+    
+@app.route('/account/logout', methods=['POST'])
+def logout_user():
+
+    """Handles user logout by clearing the session."""
+    
+    user_id = session.get('user_id')
+    if not user_id:
+         flash("Not logged in.", "error")
+         return redirect(url_for('authentification_page', show_register='true'))
+
+    session.clear()
+    return redirect(url_for('index'))
+
+@app.route('/account/change_password', methods=['POST'])
+def change_password():
+    """Handles changing the user's password."""
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("Not logged in.", "error")
+        return redirect(url_for('authentification_page', show_register='true'))
+
+    new_password = request.form.get('new_password')
+    user = User.query.get(user_id)
+
+    if user:
+        user.password = new_password 
+        db.session.commit()
+        flash('Password changed successfully.', "success")
+    else:
+        flash('User not found.', "error")
+
+    # Redirect the user back to the account page with a parameter to show the password form
+    return redirect(url_for('account_page', show_form='password'))
+
+@app.route('/account/change_info', methods=['POST'])
+def change_info():
+    """Handles changing the user's name and/or email."""
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("Not logged in.", "error")
+        return redirect(url_for('authentification_page', show_register='true'))
+
+    user = User.query.get(user_id)
+    if user:
+        new_name = request.form.get('new-name')
+        new_email = request.form.get('new-email')
+
+        if new_name:
+            user.name = new_name
+
+        if new_email and new_email != user.email:
+            existing_user = User.query.filter_by(email=new_email).first()
+            if existing_user and existing_user.id != user.id:
+                flash('Email already in use. Try another email.','error')
+                return redirect(url_for('account_page', show_form='account'))
+                
+            user.email = new_email
+
+        db.session.commit()
+        flash('Information updated successfully.','success')
+    else:
+        flash('User not found.', 'error')
+        
+    # Redirect the user back to the account page with a parameter to show the account info form
+    return redirect(url_for('account_page', show_form='account'))
+
+@app.route('/account/delete_account', methods=['POST'])
+def delete_account():
+    """Deletes a user's account and logs them out."""
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("Not logged in.", "error")
+        return redirect(url_for('authentification_page', show_register='true'))
+
+    user = User.query.get(user_id)
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+        session.clear()
+        flash("Account deleted successfully.", "success")
+        return redirect(url_for('index'))
+    else:
+        flash('User not found.', "error")
+        return redirect(url_for('account_page'))

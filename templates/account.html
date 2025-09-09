@@ -1,7 +1,127 @@
 {% extends "base.html" %} {% block main %}
 <section id="log-workout" class="section">
   <div class="container">
-    
+    <h2 class="review-headers">Welcome, {{ user.name }}!</h2>
+    <div class="data-forms">
+      <ul class="settings-list">
+        <li>
+          <button id="changePasswordBtn" class="settings-row">
+            <img src="/static/images/password.png" alt="Change Password Icon" />
+            <span>Change password</span>
+          </button>
+        </li>
+        <li>
+          <button id="changeAccountInfoBtn" class="settings-row">
+            <img
+              src="/static/images/account_management.png"
+              alt="Change Account Information Icon"
+            />
+            <span>Change account information</span>
+          </button>
+        </li>
+        <li>
+          <button id="logoutBtn" class="settings-row">
+            <img src="/static/images/logout.png" alt="Log Out Icon" />
+            <span>Log out</span>
+          </button>
+        </li>
+        <li>
+          <button id="deleteAccountBtn" class="settings-row delete-button">
+            <img
+              src="/static/images/delete.png"
+              alt="Permanently Delete Account Icon"
+            />
+            <span>Permanently delete account</span>
+          </button>
+        </li>
+      </ul>
     </div>
+    <div id="popupPasswordForm" class="popup-form" style="display: none">
+      <div class="form-content">
+        <span class="close-button" id="closeFormBtn-password">&times;</span>
+        <h3>Change password</h3>
+        <form action="{{ url_for('change_password') }}" method="POST">
+          <div class="form-group">
+            <label for="change-password">New password</label>
+            <input
+              type="password"
+              id="change-password"
+              name="new_password"
+              required
+              autocomplete="new-password"
+            />
+          </div>
+          {% with messages = get_flashed_messages() %} {% if messages %}
+          <div class="flash-messages">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+          </div>
+          {% endif %} {% endwith %}
+          <button type="submit" class="account-button">Change password</button>
+        </form>
+      </div>
+    </div>
+    <div id="accountInfoPopupForm" class="popup-form" style="display: none">
+      <div class="form-content">
+        <span class="close-button" id="closeFormBtn-account">&times;</span>
+        <h3>Change account information</h3>
+        <form action="{{ url_for('change_info') }}" method="POST">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="new-name" required />
+          </div>
+          <div class="form-group">
+            <label for="create-account-email">Email Address</label>
+            <input
+              type="email"
+              id="create-account-email"
+              name="new-email"
+              required
+              autocomplete="email"
+            />
+          </div>
+          {% with messages = get_flashed_messages() %} {% if messages %}
+          <div class="flash-messages">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+          </div>
+          {% endif %} {% endwith %}
+          <button type="submit" class="account-button">
+            Change information
+          </button>
+        </form>
+      </div>
+    </div>
+    <div id="logoutPopupForm" class="popup-form" style="display: none">
+      <div class="form-content">
+        <span class="close-button" id="closeFormBtn-logout">&times;</span>
+        <h3>Are you sure you want to log out?</h3>
+        <form action="{{ url_for('logout_user') }}" method="POST">
+          <button type="submit" class="remove-item-button">Log out</button>
+        </form>
+      </div>
+    </div>
+    <div id="deleteAccountPopupForm" class="popup-form" style="display: none">
+      <div class="form-content">
+        <span class="close-button" id="closeFormBtn-delete">&times;</span>
+        <h3>Are you sure you want to permanently delete your account?</h3>
+        <p>This action is non reversible.</p>
+        <form action="{{ url_for('delete_account') }}" method="POST">
+          {% with messages = get_flashed_messages() %} {% if messages %}
+          <div class="flash-messages">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+          </div>
+          {% endif %} {% endwith %}
+          <button type="submit" class="remove-item-button">
+            Delete account
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 </section>
 {% endblock %}

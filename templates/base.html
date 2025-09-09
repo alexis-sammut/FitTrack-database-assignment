@@ -24,8 +24,13 @@
             <li><a href="/log_workout">Log Workout</a></li>
             <li><a href="/log_meal">Log Meal</a></li>
             <li><a href="/review">Review Progress</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><a class="account" href="/authentification">Account</a></li>
+            <li>
+                {% if 'user_id' in session %}
+                <a class="account" href="{{ url_for('account_page') }}">Account</a>
+                {% else %}
+                <a class="account" href="{{ url_for('authentification_page') }}">Account</a>
+                {% endif %}
+            </li>
           </ul>
         </nav>
       </div>
