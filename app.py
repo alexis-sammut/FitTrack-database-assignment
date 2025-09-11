@@ -19,8 +19,20 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Initialize the database object
 db = SQLAlchemy(app)
 
+# Function to capitalise first letter of user's name
+def capitalize_words(s):
+    if not isinstance(s, str):
+        return s
+    return ' '.join(word.capitalize() for word in s.split())
+
+
+
+# Add the filter to the Jinja environment
+
+app.jinja_env.filters['capitalize_words'] = capitalize_words
+
 import routes
-import models # We'll import the models file here
+import models
 
 # This is a good place to call db.create_all() to create your tables.
 # You only need to run this once. For development, you can run it

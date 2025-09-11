@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block main %}
 <section id="log-workout" class="section">
   <div class="container">
-    <h2 class="review-headers">Welcome, {{ user.name }}!</h2>
+   <h2 class="review-headers">Welcome, {{ user.name | capitalize_words }}!</h2>
     <div class="data-forms">
       <ul class="settings-list">
         <li>
@@ -51,10 +51,11 @@
               autocomplete="new-password"
             />
           </div>
-          {% with messages = get_flashed_messages() %} {% if messages %}
-          <div class="flash-messages">
-            {% for message in messages %}
-            <p>{{ message }}</p>
+          {% with messages = get_flashed_messages(with_categories=true) %} {% if
+          messages %}
+          <div class="flash">
+            {% for category, message in messages %}
+            <p class="flash-{{ category }}">{{ message }}</p>
             {% endfor %}
           </div>
           {% endif %} {% endwith %}
@@ -69,7 +70,13 @@
         <form action="{{ url_for('change_info') }}" method="POST">
           <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" id="name" name="new-name" required />
+            <input
+              type="text"
+              id="name"
+              name="new-name"
+              required
+              value="{{ user.name }}"
+            >
           </div>
           <div class="form-group">
             <label for="create-account-email">Email Address</label>
@@ -78,13 +85,14 @@
               id="create-account-email"
               name="new-email"
               required
-              autocomplete="email"
+              value="{{ user.email }}"
             />
           </div>
-          {% with messages = get_flashed_messages() %} {% if messages %}
-          <div class="flash-messages">
-            {% for message in messages %}
-            <p>{{ message }}</p>
+          {% with messages = get_flashed_messages(with_categories=true) %} {% if
+          messages %}
+          <div class="flash">
+            {% for category, message in messages %}
+            <p class="flash-{{ category }}">{{ message }}</p>
             {% endfor %}
           </div>
           {% endif %} {% endwith %}
@@ -109,10 +117,11 @@
         <h3>Are you sure you want to permanently delete your account?</h3>
         <p>This action is non reversible.</p>
         <form action="{{ url_for('delete_account') }}" method="POST">
-          {% with messages = get_flashed_messages() %} {% if messages %}
-          <div class="flash-messages">
-            {% for message in messages %}
-            <p>{{ message }}</p>
+          {% with messages = get_flashed_messages(with_categories=true) %} {% if
+          messages %}
+          <div class="flash">
+            {% for category, message in messages %}
+            <p class="flash-{{ category }}">{{ message }}</p>
             {% endfor %}
           </div>
           {% endif %} {% endwith %}

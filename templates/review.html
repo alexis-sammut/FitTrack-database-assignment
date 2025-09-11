@@ -1,5 +1,14 @@
 {% extends "base.html" %} {% block main %}
-
+{% if not user %}
+<div class="logout-banner">
+  You're not currently logged in. Any logged meal will be stored temporarily
+  only. If you wish to keep data logged, please
+  <a href="{{ url_for('authentification_page') }}"
+    >log in or create an account</a
+  >
+  first.
+</div>
+{% endif %}
 <!-- Script block: injects session data into JS variables via Flask -->
 
 <script>

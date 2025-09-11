@@ -996,10 +996,24 @@ document.addEventListener("DOMContentLoaded", () => {
     createAccountForm.classList.toggle("hidden-form");
   }
 
-  // Add event listeners for the tab buttons
+  // Function to clear flash messages
+  function clearFlashMessages() {
+    const successMessages = document.querySelectorAll(".flash");
+    successMessages.forEach((element) => {
+      element.remove();
+    });
+  }
+
+  // Add event listeners for the tab buttons to switch form, and hide message
   if (loginTab && createAccountTab) {
-    loginTab.addEventListener("click", formSwitcher);
-    createAccountTab.addEventListener("click", formSwitcher);
+    loginTab.addEventListener("click", () => {
+      formSwitcher();
+      clearFlashMessages();
+    });
+    createAccountTab.addEventListener("click", () => {
+      formSwitcher();
+      clearFlashMessages();
+    });
   }
 
   // Check the URL for a parameter to automatically switch to the Create Account form
@@ -1036,21 +1050,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Function to show a popup form and prevent background scrolling
   function showPopupForm(popupForm) {
-  if (popupForm) {
-    popupForm.style.display = "flex";
-    document.body.style.overflow = "hidden";
+    if (popupForm) {
+      popupForm.style.display = "flex";
+      document.body.style.overflow = "hidden";
+    }
   }
-}
 
   // Function to hide all popup forms and re-enable scrolling
   function hideAllPopupForms() {
-  allpopupForms.forEach((popupForm) => {
-    if (popupForm) {
-      popupForm.style.display = "none";
-    }
-  });
-  document.body.style.overflow = "auto";
-}
+    allpopupForms.forEach((popupForm) => {
+      if (popupForm) {
+        popupForm.style.display = "none";
+      }
+    });
+    document.body.style.overflow = "auto";
+  }
 
   // Event listeners to show the correct pop-up on button click
   changePasswordBtn.onclick = function () {
@@ -1074,6 +1088,7 @@ document.addEventListener("DOMContentLoaded", () => {
   closeBtns.forEach((btn) => {
     btn.onclick = function () {
       hideAllPopupForms();
+      clearFlashMessages();
     };
   });
 
@@ -1081,27 +1096,28 @@ document.addEventListener("DOMContentLoaded", () => {
   window.onclick = function (event) {
     if (event.target.classList.contains("popup-form")) {
       hideAllPopupForms();
+      clearFlashMessages();
     }
   };
 
-// Check the URL for a parameter to automatically switch to the correct popup form 
-const urlParamPopupForm = new URLSearchParams(window.location.search);
-const showForm = urlParamPopupForm.get('show_form');
+  // Check the URL for a parameter to automatically switch to the correct popup form
+  const urlParamPopupForm = new URLSearchParams(window.location.search);
+  const showForm = urlParamPopupForm.get("show_form");
 
-if (showForm) {
-    switch(showForm) {
-        case 'password':
-            showPopupForm(passwordPopupForm);
-            break;
-        case 'account':
-            showPopupForm(accountInfoPopupForm);
-            break;
-        case 'logout':
-            showPopupForm(logoutPopupForm);
-            break;
-        case 'delete':
-            showPopupForm(deleteAccountPopupForm);
-            break;
+  if (showForm) {
+    switch (showForm) {
+      case "password":
+        showPopupForm(passwordPopupForm);
+        break;
+      case "account":
+        showPopupForm(accountInfoPopupForm);
+        break;
+      case "logout":
+        showPopupForm(logoutPopupForm);
+        break;
+      case "delete":
+        showPopupForm(deleteAccountPopupForm);
+        break;
     }
-}
+  }
 });

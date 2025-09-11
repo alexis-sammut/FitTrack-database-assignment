@@ -1,4 +1,14 @@
 {% extends "base.html" %} {% block main %}
+{% if not user %}
+<div class="logout-banner">
+  You're not currently logged in. Any logged meal will be stored temporarily
+  only. If you wish to keep data logged, please
+  <a href="{{ url_for('authentification_page') }}"
+    >log in or create an account</a
+  >
+  first.
+</div>
+{% endif %}
 <section id="log-meal" class="section">
   <div class="container">
     <h2>Log Your Meal</h2>

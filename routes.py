@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, session, jsonify, flash
+from flask import render_template, request, redirect, url_for, session, jsonify, flash, get_flashed_messages
 from app import app, db
 from models import User
 import json
@@ -6,15 +6,19 @@ import time
 
 @app.route('/', methods=['GET'])
 def index():
-    
-    """Renders the home page."""
-    
-    return render_template('index.html')
+    """Renders the home page, passing user information if they are logged in."""
+    user = None
+    if 'user_id' in session:
+        user = User.query.get(session.get('user_id'))
+    return render_template('index.html', user=user)
 
 @app.route('/log_workout', methods=['GET', 'POST'])
 def log_workout_page():
     
     """Handles the log workout form submission."""
+    user = None
+    if 'user_id' in session:
+        user = User.query.get(session.get('user_id'))
     
     if request.method == 'POST':
         # Initialize 'workouts' in session if it doesn't exist yet
@@ -38,12 +42,16 @@ def log_workout_page():
         # Redirect to the review page after logging the workout
         return redirect(url_for('review_page'))
     
-    return render_template('log_workout.html')
+    return render_template('log_workout.html', user=user)
+
 
 @app.route('/log_meal', methods=['GET', 'POST'])
 def log_meal_page():
     
     """Handles the log meal form submission."""
+    user = None
+    if 'user_id' in session:
+        user = User.query.get(session.get('user_id'))
     
     if request.method == 'POST':
          # Initialize 'meals' in session if it doesn't exist yet
@@ -62,17 +70,23 @@ def log_meal_page():
             session.modified = True
 
         return redirect(url_for('review_page'))
-        
-    return render_template('log_meal.html')
+   
+    return render_template('log_meal.html', user=user)
 
 @app.route('/review', methods=['GET'])
 def review_page():
     
     """Renders the review page, getting logged workouts and meals from the session."""
-    
+    user = None
+    if 'user_id' in session:
+        user = User.query.get(session.get('user_id'))
+
     workouts = session.get('workouts', [])
     meals = session.get('meals', [])
-    return render_template('review.html', workouts=workouts, meals=meals)
+    
+    return render_template('review.html', workouts=workouts, meals=meals, user=user)
+
+
 
 @app.route('/delete_item', methods=['POST'])
 def delete_item():
@@ -261,3 +275,4 @@ def delete_account():
     else:
         flash('User not found.', "error")
         return redirect(url_for('account_page'))
+    

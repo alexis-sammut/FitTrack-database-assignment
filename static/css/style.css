@@ -109,11 +109,12 @@ main {
 }
 
 /* Home page */
+
 .hero {
   background: linear-gradient(135deg, #3498db, #2980b9);
   color: #fff;
   text-align: center;
-  padding: 100px 20px;
+  padding: 50px 20px;
   border-radius: 10px;
   margin-bottom: 30px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
@@ -268,7 +269,7 @@ main {
   border-radius: 0 0 10px 10px;
 }
 
-.flash-messages {
+.flash-error {
   color: red;
 }
 
@@ -389,6 +390,11 @@ main {
 }
 
 /* Log workout page */
+.logout-banner{
+  text-align: center;
+  color: #2c3e50;
+}
+
 .data-form {
   max-width: 800px;
   margin: 0 auto;

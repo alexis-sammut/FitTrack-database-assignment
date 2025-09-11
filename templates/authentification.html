@@ -1,78 +1,88 @@
 {% extends "base.html" %} {% block main %}
 <section id="log-workout" class="section">
   <div class="container">
-      <div class="tab-container">
-        <button id="loginTab" class="tab-button active">Log In</button>
-        <button id="createAccountTab" class="tab-button ">
-          Create Account
-        </button>
-      </div>
-      <div class="form-container">
-        <form id="loginForm" action="{{ url_for('login_user') }}" method="POST">
+    <div class="tab-container">
+      <button id="loginTab" class="tab-button active">Log In</button>
+      <button id="createAccountTab" class="tab-button">Create Account</button>
+    </div>
+    <div class="form-container">
+      <form id="loginForm" action="{{ url_for('login_user') }}" method="POST">
+        <div class="form-group">
+          <label for="login-email">Email Address</label>
+          <input
+            type="email"
+            id="login-email"
+            name="email"
+            required
+            autocomplete="email"
+          />
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input
+            type="password"
+            id="login-password"
+            name="password"
+            required
+            autocomplete="current-password"
+          />
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash">
+            {% for category, message in messages %}
+              <p class="flash-{{ category }}">{{ message }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% endwith %}
+        <button type="submit" class="button">Log In</button>
+      </form>
+
+      <form
+        id="createAccountForm"
+        class="hidden-form"
+        action="{{ url_for('register_user') }}"
+        method="POST"
+      >
+        <div class="form-entry-row">
           <div class="form-group">
-            <label for="login-email">Email Address</label>
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+          <div class="form-group">
+            <label for="create-account-email">Email Address</label>
             <input
               type="email"
-              id="login-email"
+              id="create-account-email"
               name="email"
               required
               autocomplete="email"
             />
           </div>
-          <div class="form-group">
-            <label for="login-password">Password</label>
-            <input
-              type="password"
-              id="login-password"
-              name="password"
-              required
-              autocomplete="current-password"
-            />
+        </div>
+        <div class="form-group">
+          <label for="signup-password">Password</label>
+          <input
+            type="password"
+            id="signup-password"
+            name="password"
+            required
+            autocomplete="new-password"
+          />
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash">
+            {% for category, message in messages %}
+              <p class="flash-{{ category }}">{{ message }}</p>
+            {% endfor %}
           </div>
-          <button type="submit" class="button">Log In</button>
-        </form>
-
-        <form id="createAccountForm" class="hidden-form" action="{{ url_for('register_user') }}" method="POST">
-          <div class="form-entry-row">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" id="name" name="name" required />
-            </div>
-            <div class="form-group">
-              <label for="create-account-email">Email Address</label>
-              <input
-                type="email"
-                id="create-account-email"
-                name="email"
-                required
-                autocomplete="email"
-              />
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="signup-password">Password</label>
-            <input
-              type="password"
-              id="signup-password"
-              name="password"
-              required
-              autocomplete="new-password"
-            />
-          </div>
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <div class="flash-messages">
-      {% for message in messages %}
-        <p>{{ message }}</p>
-      {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <button type="submit" class="account-button">Create Account</button>
+      </form>
     </div>
-  {% endif %}
-{% endwith %}
-          <button type="submit" class="account-button">
-            Create Account
-          </button>
-        </form>
-      </div>
   </div>
 </section>
 {% endblock %}
