@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, session, jsonify, flash, get_flashed_messages
 from app import app, db
-from models import User
+from models import User, WorkoutLogged, MealsLogged, LoggedIngredient, DayLogged
 import json
 import time
 
@@ -14,36 +14,70 @@ def index():
 
 @app.route('/log_workout', methods=['GET', 'POST'])
 def log_workout_page():
-    
     """Handles the log workout form submission."""
     user = None
     if 'user_id' in session:
         user = User.query.get(session.get('user_id'))
-    
-    if request.method == 'POST':
-        # Initialize 'workouts' in session if it doesn't exist yet
-        if 'workouts' not in session:
-            session['workouts'] = []
 
-        # Create a new workout dictionary from the form inputs
-        new_workout = {
-            'id': int(time.time() * 1000), # ID based on timestamp
-            'type': request.form.get('workoutType'),
-            'duration': request.form.get('duration'),
-            'distance': request.form.get('distance'),
-            'pace': request.form.get('pace'),
-            'intensity': request.form.get('intensity'),
-            'calories': request.form.get('estimatedCalories')
-        }
+    if request.method == 'POST':
+        user_id = session.get('user_id')
+
+        # Data from form
+        workout_type = request.form.get('workoutType')
+        duration = request.form.get('duration')
+        distance = request.form.get('distance')
+        pace = request.form.get('pace')
+        intensity = request.form.get('intensity')
+        calories = request.form.get('estimatedCalories')
+
+        # Logic to save to DB for logged-in users
+        if user_id:
+            try:
+                # Create a new WorkoutLogged object with all the data
+                new_db_workout = WorkoutLogged(
+                    user_id=user_id,
+                    workout_type=workout_type,
+                    duration=int(duration),
+                    distance=float(distance) if distance else None,
+                    pace=float(pace) if pace else None,
+                    intensity=intensity,
+                    calories=float(calories) if calories else None
+                )
+
+                # Add and commit the object to the database
+                db.session.add(new_db_workout)
+                db.session.commit()
+                flash("Workout logged successfully!", "success")
+                
+            except Exception as e:
+                db.session.rollback()
+                print(f"Error saving workout to database: {e}")
         
-        session['workouts'].append(new_workout)
-        session.modified = True
-        
-        # Redirect to the review page after logging the workout
+        else:
+            # Logic to save to session for non logged-in users
+            if 'workouts' not in session:
+                session['workouts'] = []
+
+            # Create a dictionary for the workout
+            new_session_workout = {
+                'id': int(time.time() * 1000),
+                'type': workout_type,
+                'duration': duration,
+                'distance': distance,
+                'pace': pace,
+                'intensity': intensity,
+                'calories': calories
+            }
+
+            # Append the dictionary to the session list
+            session['workouts'].append(new_session_workout)
+            session.modified = True
+            flash("Workout logged temporarily!", "success")
+
+        # Redirect to the review page after processing
         return redirect(url_for('review_page'))
     
     return render_template('log_workout.html', user=user)
-
 
 @app.route('/log_meal', methods=['GET', 'POST'])
 def log_meal_page():
@@ -81,12 +115,33 @@ def review_page():
     if 'user_id' in session:
         user = User.query.get(session.get('user_id'))
 
-    workouts = session.get('workouts', [])
-    meals = session.get('meals', [])
+    user_id = session.get('user_id')
+    workouts = []
+    meals = []
     
-    return render_template('review.html', workouts=workouts, meals=meals, user=user)
-
-
+    if user_id :
+        # Fetch workouts and meals from the database for the logged-in user
+        db_workouts = WorkoutLogged.query.filter_by(user_id=user_id).all()
+        db_meals = MealsLogged.query.filter_by(user_id=user_id).all()    
+        
+        # Convert objects to dictionaries for JSON serialization
+        workouts_list = [
+            {
+                'id': w.id,
+                'type': w.workout_type,
+                'duration': w.duration,
+                'distance': w.distance,
+                'pace': w.pace,
+                'intensity': w.intensity,
+                'calories': w.calories
+            } for w in db_workouts
+        ]
+        
+    else : 
+        workouts_list = session.get('workouts', [])
+        meals = session.get('meals', [])
+    
+    return render_template('review.html', workouts=workouts_list, meals=meals, user=user)
 
 @app.route('/delete_item', methods=['POST'])
 def delete_item():

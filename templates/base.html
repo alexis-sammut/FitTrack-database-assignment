@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FitTrack - Your Fitness Journey</title>
     <link
       rel="icon"
       type="image/x-icon"
       href="{{ url_for('static', filename='images/favicon.ico') }}"
-   >
+    />
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
-   >
+    />
   </head>
   <body>
     <header>
@@ -23,13 +23,34 @@
             <li><a href="/">Home</a></li>
             <li><a href="/log_workout">Log Workout</a></li>
             <li><a href="/log_meal">Log Meal</a></li>
+            <li class="has-submenu">
+              <a href="#">Log</a>
+              <ul class="submenu">
+                <li><a href="/log_workout">Log Workout</a></li>
+                <li><a href="/log_meal">Log Meal</a></li>
+                <li><a href="">Log Mood?</a></li>
+              </ul>
+            </li>
             <li><a href="/review">Review Progress</a></li>
+            <li class="has-submenu">
+              <a href="/review">Review Progress</a>
+              <ul class="submenu">
+                <li><a href="/review">Review Workouts</a></li>
+                <li><a href="/review">Review Meals</a></li>
+                <li><a href="">Review Mood?</a></li>
+              </ul>
+            </li>
+            <li><a href="/contact">Contact</a></li>
             <li>
-                {% if 'user_id' in session %}
-                <a class="account" href="{{ url_for('account_page') }}">Account</a>
-                {% else %}
-                <a class="account" href="{{ url_for('authentification_page') }}">Account</a>
-                {% endif %}
+              {% if 'user_id' in session %}
+              <a class="account" href="{{ url_for('account_page') }}"
+                >Account</a
+              >
+              {% else %}
+              <a class="account" href="{{ url_for('authentification_page') }}"
+                >Account</a
+              >
+              {% endif %}
             </li>
           </ul>
         </nav>

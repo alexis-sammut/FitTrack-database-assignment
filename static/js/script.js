@@ -261,7 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function addFoodField() {
       const container = document.getElementById("foodEntriesContainer");
-      const allRows = container.querySelectorAll(".food-entry-row");
+      const allRows = container.querySelectorAll(".form-entry-row");
       const lastRow = allRows[allRows.length - 1];
       const lastFoodInput = lastRow.querySelector('input[name="foodName[]"]');
 
@@ -274,7 +274,7 @@ document.addEventListener("DOMContentLoaded", () => {
       fieldErrorMessage.textContent = "";
       const currentRowCount = container.children.length + 1;
       const newRow = document.createElement("div");
-      newRow.classList.add("food-entry-row");
+      newRow.classList.add("form-entry-row");
       newRow.innerHTML = `
         <div class="form-group">
             <label for="foodName${currentRowCount}">Food Name</label>
@@ -297,7 +297,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     foodEntriesContainer.addEventListener("click", function (event) {
       if (event.target.classList.contains("remove-item-button")) {
-        event.target.closest(".food-entry-row").remove();
+        event.target.closest(".form-entry-row").remove();
       }
     });
 

@@ -1,0 +1,165 @@
+{% extends "base.html" %} {% block main %}
+{% if not user %}
+<div class="logout-banner">
+  You're not currently logged in. Any logged meal will be stored temporarily
+  only. If you wish to keep data logged, please
+  <a href="{{ url_for('authentification_page') }}"
+    >log in or create an account</a
+  >
+  first.
+</div>
+{% endif %}
+<script>
+  const mealsData = {{ meals | tojson }};
+</script>
+<section id="stats-overview" class="section">
+  <div class="container">
+    <h2 class="review-headers">Stats Overview</h2>
+    <div class="stats-overview-grid">
+      <div class="stats-column">
+        <h3 class="review-headers">Meal Stats</h3>
+        <div class="stats-grid-meal">
+          <div class="stat-box amount-colour">
+            <p>Total Amount</p>
+            <div class="data">
+              <span id="logged-total" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box fat-colour">
+            <p>Total Fat</p>
+            <div class="data">
+              <span id="logged-total-fat" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box fat-colour">
+            <p>Total Saturated Fat</p>
+            <div class="data">
+              <span id="logged-total-saturated-fat" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box carbs-colour">
+            <p>Total Carbs</p>
+            <div class="data">
+              <span id="logged-total-carbs" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box carbs-colour">
+            <p>Total Fiber</p>
+            <div class="data">
+              <span id="logged-total-fiber" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box carbs-colour">
+            <p>Total Sugar</p>
+            <div class="data">
+              <span id="logged-total-sugar" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box micronutrients-colour">
+            <p>Total Sodium</p>
+            <div class="data">
+              <span id="logged-total-sodium" class="stat-value">0</span
+              ><span class="unit">mg</span>
+            </div>
+          </div>
+          <div class="stat-box micronutrients-colour">
+            <p>Total Potassium</p>
+            <div class="data">
+              <span id="logged-total-potassium" class="stat-value">0</span
+              ><span class="unit">mg</span>
+            </div>
+          </div>
+          <div class="stat-box micronutrients-colour">
+            <p>Total Cholesterol</p>
+            <div class="data">
+              <span id="logged-total-cholesterol" class="stat-value">0</span
+              ><span class="unit">mg</span>
+            </div>
+          </div>
+        </div>
+        <div class="stats-grid-meal">
+          <div class="stat-box amount-colour">
+            <p>Average Amount</p>
+            <div class="data">
+              <span id="avg-amount" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box fat-colour">
+            <p>Average Fat</p>
+            <div class="data">
+              <span id="avg-fat" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box fat-colour">
+            <p>Average Saturated Fat</p>
+            <div class="data">
+              <span id="avg-saturated-fat" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box carbs-colour">
+            <p>Average Carbs</p>
+            <div class="data">
+              <span id="avg-carbs" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box carbs-colour">
+            <p>Average Fiber</p>
+            <div class="data">
+              <span id="avg-fiber" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box carbs-colour">
+            <p>Average Sugar</p>
+            <div class="data">
+              <span id="avg-sugar" class="stat-value">0</span
+              ><span class="unit">g</span>
+            </div>
+          </div>
+          <div class="stat-box micronutrients-colour">
+            <p>Average Sodium</p>
+            <div class="data">
+              <span id="avg-sodium" class="stat-value">0</span
+              ><span class="unit">mg</span>
+            </div>
+          </div>
+          <div class="stat-box micronutrients-colour">
+            <p>Average Potassium</p>
+            <div class="data">
+              <span id="avg-potassium" class="stat-value">0</span
+              ><span class="unit">mg</span>
+            </div>
+          </div>
+          <div class="stat-box micronutrients-colour">
+            <p>Average Cholesterol</p>
+            <div class="data">
+              <span id="avg-cholesterol" class="stat-value">0</span
+              ><span class="unit">mg</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="logged-meals" class="section">
+  <div class="container">
+    <h2>Logged Meals</h2>
+    <div id="mealList" class="data-list">
+      <p class="no-data-message">
+        No meals logged yet. <a href="/log_meal">Log one now!</a>
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

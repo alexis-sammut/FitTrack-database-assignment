@@ -43,6 +43,7 @@ header nav ul {
 
 header nav ul li {
   display: inline-block;
+  position: relative;
   margin-left: 25px;
 }
 
@@ -73,6 +74,34 @@ header nav ul li a::after {
 
 header nav ul li a:hover::after {
   width: 100%;
+}
+
+.submenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #34495e;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  min-width: 150px;
+  z-index: 100;
+}
+
+.submenu li {
+  display: block;
+  margin: 0;
+  padding: 5px;
+}
+
+.submenu a {
+  padding: 8px 10px;
+  white-space: nowrap;
+}
+
+.has-submenu:hover > .submenu {
+  display: block; 
 }
 
 header .container::after {
