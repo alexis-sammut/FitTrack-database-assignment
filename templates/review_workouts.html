@@ -1,24 +1,21 @@
-{% extends "base.html" %} {% block main %}
-{% if not user %}
+{% extends "base.html" %} {% block main %} {% if not user %}
+
 <div class="logout-banner">
   You're not currently logged in. Any logged workout will be stored temporarily
   only. If you wish to keep data logged, please
-  <a href="{{ url_for('authentification_page') }}"
-    >log in or create an account</a
-  >
+  <a href="{{ url_for('authentification') }}">log in or create an account</a>
   first.
 </div>
 {% endif %}
-<script>
+<script id="review_workouts">
   // The tojson filter serializes the data correctly, whether it's from the database or session
   const workoutsData = {{ workouts | tojson }};
 </script>
 <section id="stats-overview" class="section">
   <div class="container">
-    <h2 class="review-headers">Stats Overview</h2>
+    <h2 class="review-headers">Workouts</h2>
     <div class="stats-overview-grid">
       <div class="stats-column">
-        <h3 class="review-headers">Workout Stats</h3>
         <div class="stats-grid">
           <div class="stat-box session-colour">
             <p>Workouts Logged</p>
@@ -53,17 +50,22 @@
             </div>
           </div>
         </div>
-        <h4 class="review-headers">
-          <button type="button" class="show-more-button">
-            Show stats per workout &gt;
-          </button>
-        </h4>
+        <div class="form-group review-workout">
+          <select id="workoutType" name="workoutType" required>
+            <option value="" disabled selected>Show stats per workout</option>
+            <option value="Running">Running</option>
+            <option value="Walking">Walking</option>
+            <option value="Cycling">Cycling</option>
+            <option value="Yoga">Yoga</option>
+            <option value="Strength Training">Strength Training</option>
+            <option value="HIIT">HIIT</option>
+            <option value="Rowing">Rowing</option>
+            <option value="Pilates">Pilates</option>
+            <option value="Swimming">Swimming</option>
+            <option value="Hiking">Hiking</option>
+          </select>
+        </div>
         <div id="workout-stats">
-          <h4 class="review-headers">
-            <button type="button" class="show-more-button">
-              Running Stats &gt;
-            </button>
-          </h4>
           <div class="stats-grid hidden" id="runningStats">
             <div class="stat-box session-colour">
               <p>Runs Logged</p>
@@ -98,11 +100,6 @@
               </div>
             </div>
           </div>
-          <h4 class="review-headers">
-            <button type="button" class="show-more-button">
-              Walking Stats &gt;
-            </button>
-          </h4>
           <div class="stats-grid hidden" id="walkingStats">
             <div class="stat-box session-colour">
               <p>Walks Logged</p>
@@ -137,11 +134,6 @@
               </div>
             </div>
           </div>
-          <h4 class="review-headers">
-            <button type="button" class="show-more-button">
-              Cycling Stats &gt;
-            </button>
-          </h4>
           <div class="stats-grid hidden" id="cyclingStats">
             <div class="stat-box session-colour">
               <p>Cycles Logged</p>
@@ -176,11 +168,6 @@
               </div>
             </div>
           </div>
-          <h4 class="review-headers">
-            <button type="button" class="show-more-button">
-              Rowing Stats &gt;
-            </button>
-          </h4>
           <div class="stats-grid hidden" id="rowingStats">
             <div class="stat-box session-colour">
               <p>Rowing Sessions Logged</p>
@@ -205,11 +192,6 @@
               <span id="avg-rowing-intensity" class="stat-value">0</span>
             </div>
           </div>
-          <h4 class="review-headers">
-            <button type="button" class="show-more-button">
-              Swimming Stats &gt;
-            </button>
-          </h4>
           <div class="stats-grid hidden" id="swimmingStats">
             <div class="stat-box session-colour">
               <p>Swims Logged</p>
@@ -234,11 +216,6 @@
               <span id="avg-swims-intensity" class="stat-value">0</span>
             </div>
           </div>
-          <h4 class="review-headers">
-            <button type="button" class="show-more-button">
-              Hiking Stats &gt;
-            </button>
-          </h4>
           <div class="stats-grid hidden" id="hikingStats">
             <div class="stat-box session-colour">
               <p>Hikes Logged</p>
@@ -263,11 +240,6 @@
               <span id="avg-hikes-intensity" class="stat-value">0</span>
             </div>
           </div>
-          <h4 class="review-headers">
-            <button type="button" class="show-more-button">
-              Yoga Stats &gt;
-            </button>
-          </h4>
           <div class="stats-grid hidden" id="yogaStats">
             <div class="stat-box session-colour">
               <p>Yoga Sessions Logged</p>
@@ -292,11 +264,6 @@
               <span id="avg-yoga-intensity" class="stat-value">0</span>
             </div>
           </div>
-          <h4 class="review-headers">
-            <button type="button" class="show-more-button">
-              Pilates Stats &gt;
-            </button>
-          </h4>
           <div class="stats-grid hidden" id="pilatesStats">
             <div class="stat-box session-colour">
               <p>Pilates Sessions Logged</p>
@@ -322,11 +289,6 @@
               <span id="avg-pilates-intensity" class="stat-value">0</span>
             </div>
           </div>
-          <h4 class="review-headers">
-            <button type="button" class="show-more-button">
-              HIIT Stats &gt;
-            </button>
-          </h4>
           <div class="stats-grid hidden" id="hiitStats">
             <div class="stat-box session-colour">
               <p>HIITs Logged</p>
@@ -351,12 +313,7 @@
               <span id="avg-hiits-intensity" class="stat-value">0</span>
             </div>
           </div>
-          <h4 class="review-headers">
-            <button type="button" class="show-more-button">
-              Strength Training Stats &gt;
-            </button>
-          </h4>
-          <div class="stats-grid hidden" id="strengthStats">
+          <div class="stats-grid hidden" id="strengthtrainingStats">
             <div class="stat-box session-colour">
               <p>Strength Trainings Logged</p>
               <span id="total-strength" class="stat-value">0</span>

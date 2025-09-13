@@ -92,7 +92,7 @@ header nav ul li a:hover::after {
 .submenu li {
   display: block;
   margin: 0;
-  padding: 5px;
+  padding-bottom: 5px;
 }
 
 .submenu a {
@@ -791,6 +791,10 @@ main {
   color: #aaaaaa;
   margin-left: 5px;
   margin-top: 20px;
+}
+
+.review-workout{
+  max-width: 250px;
 }
 
 /* Contact Page */

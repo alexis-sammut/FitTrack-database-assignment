@@ -325,7 +325,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
           console.error(error);
           if (error.message.includes("down")) {
-            fieldErrorMessage.innerHTML = `<strong> API error:</strong> ${error}<br> Check the status page page <a href='https://api-ninjas.com/api/nutrition'> here</a>.`;
+            fieldErrorMessage.innerHTML = `<strong> API error:</strong> ${error}<br> Check the status page <a href='https://api-ninjas.com/api/nutrition'> here</a>.`;
             return null;
           }
           fieldErrorMessage.innerHTML += `There was an issue getting the nutritional data for "<strong>${food}</strong>". Make sure there's no typo or try something else.<br>`;
@@ -476,11 +476,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Review page
-  const statsOverview = document.getElementById("stats-overview");
-  if (statsOverview) {
+
+
+  
+  // Review pages
+  const workoutReviewPage = document.getElementById("review_workouts");
+  const mealReviewPage = document.getElementById("review_meals");
+
+  if (workoutReviewPage) {
     const workouts = typeof workoutsData !== "undefined" ? workoutsData : [];
-    const meals = typeof mealsData !== "undefined" ? mealsData : [];
 
     //Function to display Workouts into the Review page
     function displayLoggedWorkouts() {
@@ -542,91 +546,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    //Function to display Meals into the Review page
-
-    function displayLoggedMeals() {
-      const container = document.getElementById("mealList");
-      if (!container) return;
-
-      if (meals.length === 0) {
-        container.innerHTML = `<p class="no-data-message">No meals logged yet. <a href="/log_meal">Log one now!</a></p>`;
-        return;
-      }
-
-      container.innerHTML = "";
-      meals.sort((a, b) => b.id - a.id);
-
-      meals.forEach((meal) => {
-        const mealEl = document.createElement("div");
-        mealEl.classList.add("logged-item-container");
-        mealEl.dataset.id = meal.id;
-        mealEl.dataset.type = "meal";
-
-        const itemsHtml = meal.items
-          .map(
-            (item) => `
-                <h4 class="review-headers"><button type="button" class="show-more-button">${item.name} &gt;</button></h4>
-                <div class="stats-grid-meal">
-                    <div class="stat-box amount-colour"><p>Amount</p><div class="data"><span class="stat-value">${item.amount}</span><span class="unit">g</span></div></div>
-                    <div class="stat-box fat-colour"><p>Fat</p><div class="data"><span class="stat-value">${item.fat_total_g}</span><span class="unit">g</span></div></div>
-                    <div class="stat-box fat-colour"><p>Saturated Fat</p><div class="data"><span class="stat-value">${item.fat_saturated_g}</span><span class="unit">g</span></div></div>
-                    <div class="stat-box carbs-colour"><p>Carbs</p><div class="data"><span class="stat-value">${item.carbohydrates_total_g}</span><span class="unit">g</span></div></div>
-                    <div class="stat-box carbs-colour"><p>Fiber</p><div class="data"><span class="stat-value">${item.fiber_g}</span><span class="unit">g</span></div></div>
-                    <div class="stat-box carbs-colour"><p>Sugar</p><div class="data"><span class="stat-value">${item.sugar_g}</span><span class="unit">g</span></div></div>
-                    <div class="stat-box micronutrients-colour"><p>Sodium</p><div class="data"><span class="stat-value">${item.sodium_mg}</span><span class="unit">mg</span></div></div>
-                    <div class="stat-box micronutrients-colour"><p>Potassium</p><div class="data"><span class="stat-value">${item.potassium_mg}</span><span class="unit">mg</span></div></div>
-                    <div class="stat-box micronutrients-colour"><p>Cholesterol</p><div class="data"><span class="stat-value">${item.cholesterol_mg}</span><span class="unit">mg</span></div></div>
-                </div>
-            `
-          )
-          .join("");
-
-        mealEl.innerHTML = `
-              <div class="logged-item-header">
-                <h3 class="review-headers">${
-                  meal.name.charAt(0).toUpperCase() + meal.name.slice(1)
-                }</h3>
-                <div class="logged-item-header-right">
-                    <button type="button" class="remove-item-button">-</button>
-                    <span>${meal.date}</span>
-                </div>
-              </div>
-              <div class="stats-grid-meal">
-                <div class="stat-box amount-colour"><p>Total Amount</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.amount
-                }</span><span class="unit">g</span></div></div>
-                <div class="stat-box fat-colour"><p>Total Fat</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.fat_total_g
-                }</span><span class="unit">g</span></div></div>
-                <div class="stat-box fat-colour"><p>Total Saturated Fat</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.fat_saturated_g
-                }</span><span class="unit">g</span></div></div>
-                <div class="stat-box carbs-colour"><p>Total Carbs</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.carbohydrates_total_g
-                }</span><span class="unit">g</span></div></div>
-                <div class="stat-box carbs-colour"><p>Total Fiber</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.fiber_g
-                }</span><span class="unit">g</span></div></div>
-                <div class="stat-box carbs-colour"><p>Total Sugar</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.sugar_g
-                }</span><span class="unit">g</span></div></div>
-                <div class="stat-box micronutrients-colour"><p>Total Sodium</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.sodium_mg
-                }</span><span class="unit">mg</span></div></div>
-                <div class="stat-box micronutrients-colour"><p>Total Potassium</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.potassium_mg
-                }</span><span class="unit">mg</span></div></div>
-                <div class="stat-box micronutrients-colour"><p>Total Cholesterol</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.cholesterol_mg
-                }</span><span class="unit">mg</span></div></div>
-              </div>
-              <h4 class="review-headers"><button type="button" class="show-more-button">Show nutrients per item &gt;</button></h4>
-              <div>${itemsHtml}</div>
-            `;
-        container.appendChild(mealEl);
-      });
-    }
-
     // Function to remove logged workout/meals
 
     async function handleRemoveItem(event) {
@@ -660,11 +579,6 @@ document.addEventListener("DOMContentLoaded", () => {
           handleRemoveItem(e);
         }
       });
-    document.getElementById("mealList").addEventListener("click", function (e) {
-      if (e.target.classList.contains("remove-item-button")) {
-        handleRemoveItem(e);
-      }
-    });
 
     // Object to map the workout type with their 'prefix' id that will help for the logic
 
@@ -812,6 +726,173 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    // Main function to trigger all stats overview updates
+    function updateStatsOverview() {
+      updateWorkoutStats(workouts);
+    }
+
+    displayLoggedWorkouts();
+    updateStatsOverview();
+
+    // Logic to hide all workout stats divs, and show the selected workout stats div in the dropdown
+
+    const workoutTypeSelect = document.getElementById("workoutType");
+    const workoutStatsContainer = document.getElementById("workout-stats");
+
+    workoutTypeSelect.addEventListener("change", (e) => {
+      const selectedValue = e.target.value;
+
+      const allStatsDivs =
+        workoutStatsContainer.querySelectorAll(".stats-grid");
+      allStatsDivs.forEach((div) => {
+        div.classList.add("hidden");
+      });
+
+
+      if (selectedValue) {
+        const statsDivToShow = document.getElementById(
+          selectedValue.toLowerCase().replace(/\s/g, "") + "Stats"
+        );
+        if (statsDivToShow) {
+          statsDivToShow.classList.remove("hidden");
+        }
+      }
+    });
+
+    // Function to transform pace from decimal to 'readable' format
+    function formatPaceToMinSec(decimalMinutes) {
+      if (
+        isNaN(decimalMinutes) ||
+        decimalMinutes === null ||
+        !isFinite(decimalMinutes)
+      )
+        return "--:--";
+      const minutes = Math.floor(decimalMinutes);
+      const seconds = Math.round((decimalMinutes - minutes) * 60);
+      return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+    }
+  }
+
+  if (mealReviewPage) {
+    const meals = typeof mealsData !== "undefined" ? mealsData : [];
+
+    //Function to display Meals into the Review page
+
+    function displayLoggedMeals() {
+      const container = document.getElementById("mealList");
+      if (!container) return;
+
+      if (meals.length === 0) {
+        container.innerHTML = `<p class="no-data-message">No meals logged yet. <a href="/log_meal">Log one now!</a></p>`;
+        return;
+      }
+
+      container.innerHTML = "";
+      meals.sort((a, b) => b.id - a.id);
+
+      meals.forEach((meal) => {
+        const mealEl = document.createElement("div");
+        mealEl.classList.add("logged-item-container");
+        mealEl.dataset.id = meal.id;
+        mealEl.dataset.type = "meal";
+
+        const itemsHtml = meal.items
+          .map(
+            (item) => `
+                <h4 class="review-headers"><button type="button" class="show-more-button">${item.name} &gt;</button></h4>
+                <div class="stats-grid-meal">
+                    <div class="stat-box amount-colour"><p>Amount</p><div class="data"><span class="stat-value">${item.amount}</span><span class="unit">g</span></div></div>
+                    <div class="stat-box fat-colour"><p>Fat</p><div class="data"><span class="stat-value">${item.fat_total_g}</span><span class="unit">g</span></div></div>
+                    <div class="stat-box fat-colour"><p>Saturated Fat</p><div class="data"><span class="stat-value">${item.fat_saturated_g}</span><span class="unit">g</span></div></div>
+                    <div class="stat-box carbs-colour"><p>Carbs</p><div class="data"><span class="stat-value">${item.carbohydrates_total_g}</span><span class="unit">g</span></div></div>
+                    <div class="stat-box carbs-colour"><p>Fiber</p><div class="data"><span class="stat-value">${item.fiber_g}</span><span class="unit">g</span></div></div>
+                    <div class="stat-box carbs-colour"><p>Sugar</p><div class="data"><span class="stat-value">${item.sugar_g}</span><span class="unit">g</span></div></div>
+                    <div class="stat-box micronutrients-colour"><p>Sodium</p><div class="data"><span class="stat-value">${item.sodium_mg}</span><span class="unit">mg</span></div></div>
+                    <div class="stat-box micronutrients-colour"><p>Potassium</p><div class="data"><span class="stat-value">${item.potassium_mg}</span><span class="unit">mg</span></div></div>
+                    <div class="stat-box micronutrients-colour"><p>Cholesterol</p><div class="data"><span class="stat-value">${item.cholesterol_mg}</span><span class="unit">mg</span></div></div>
+                </div>
+            `
+          )
+          .join("");
+
+        mealEl.innerHTML = `
+              <div class="logged-item-header">
+                <h3 class="review-headers">${
+                  meal.name.charAt(0).toUpperCase() + meal.name.slice(1)
+                }</h3>
+                <div class="logged-item-header-right">
+                    <button type="button" class="remove-item-button">-</button>
+                    <span>${meal.date}</span>
+                </div>
+              </div>
+              <div class="stats-grid-meal">
+                <div class="stat-box amount-colour"><p>Total Amount</p><div class="data"><span class="stat-value">${
+                  meal.totalNutrients.amount
+                }</span><span class="unit">g</span></div></div>
+                <div class="stat-box fat-colour"><p>Total Fat</p><div class="data"><span class="stat-value">${
+                  meal.totalNutrients.fat_total_g
+                }</span><span class="unit">g</span></div></div>
+                <div class="stat-box fat-colour"><p>Total Saturated Fat</p><div class="data"><span class="stat-value">${
+                  meal.totalNutrients.fat_saturated_g
+                }</span><span class="unit">g</span></div></div>
+                <div class="stat-box carbs-colour"><p>Total Carbs</p><div class="data"><span class="stat-value">${
+                  meal.totalNutrients.carbohydrates_total_g
+                }</span><span class="unit">g</span></div></div>
+                <div class="stat-box carbs-colour"><p>Total Fiber</p><div class="data"><span class="stat-value">${
+                  meal.totalNutrients.fiber_g
+                }</span><span class="unit">g</span></div></div>
+                <div class="stat-box carbs-colour"><p>Total Sugar</p><div class="data"><span class="stat-value">${
+                  meal.totalNutrients.sugar_g
+                }</span><span class="unit">g</span></div></div>
+                <div class="stat-box micronutrients-colour"><p>Total Sodium</p><div class="data"><span class="stat-value">${
+                  meal.totalNutrients.sodium_mg
+                }</span><span class="unit">mg</span></div></div>
+                <div class="stat-box micronutrients-colour"><p>Total Potassium</p><div class="data"><span class="stat-value">${
+                  meal.totalNutrients.potassium_mg
+                }</span><span class="unit">mg</span></div></div>
+                <div class="stat-box micronutrients-colour"><p>Total Cholesterol</p><div class="data"><span class="stat-value">${
+                  meal.totalNutrients.cholesterol_mg
+                }</span><span class="unit">mg</span></div></div>
+              </div>
+              <h4 class="review-headers"><button type="button" class="show-more-button">Show nutrients per item &gt;</button></h4>
+              <div>${itemsHtml}</div>
+            `;
+        container.appendChild(mealEl);
+      });
+    }
+
+    // Function to remove logged workout/meals
+
+    async function handleRemoveItem(event) {
+      const itemContainer = event.target.closest(".logged-item-container");
+      if (!itemContainer) return;
+
+      const itemId = parseInt(itemContainer.dataset.id, 10);
+      const itemType = itemContainer.dataset.type;
+
+      try {
+        const response = await fetch("/delete_item", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ item_type: itemType, item_id: itemId }),
+        });
+        const result = await response.json();
+        if (result.success) {
+          window.location.reload();
+        } else {
+          console.error("Failed to delete item:", result.message);
+        }
+      } catch (error) {
+        console.error("Error deleting item:", error);
+      }
+    }
+
+    document.getElementById("mealList").addEventListener("click", function (e) {
+      if (e.target.classList.contains("remove-item-button")) {
+        handleRemoveItem(e);
+      }
+    });
+
     // Function to calculate and display the appropriate overview for meals
 
     function updateMealStats(meals) {
@@ -902,11 +983,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Main function to trigger all stats overview updates
     function updateStatsOverview() {
-      updateWorkoutStats(workouts);
       updateMealStats(meals);
     }
 
-    displayLoggedWorkouts();
     displayLoggedMeals();
     updateStatsOverview();
 
@@ -924,21 +1003,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     });
-
-    // Function to transform pace from decimal to 'readable' format
-
-    function formatPaceToMinSec(decimalMinutes) {
-      if (
-        isNaN(decimalMinutes) ||
-        decimalMinutes === null ||
-        !isFinite(decimalMinutes)
-      )
-        return "--:--";
-      const minutes = Math.floor(decimalMinutes);
-      const seconds = Math.round((decimalMinutes - minutes) * 60);
-      return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-    }
   }
+
+
+
+
+
+
+
+
 
   // Functions to work across mutliple pages
   // Function to clear form inputs for Log Workout, Log Meal and Contact form

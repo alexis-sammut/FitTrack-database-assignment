@@ -21,8 +21,6 @@
         <nav>
           <ul>
             <li><a href="/">Home</a></li>
-            <li><a href="/log_workout">Log Workout</a></li>
-            <li><a href="/log_meal">Log Meal</a></li>
             <li class="has-submenu">
               <a href="#">Log</a>
               <ul class="submenu">
@@ -31,23 +29,22 @@
                 <li><a href="">Log Mood?</a></li>
               </ul>
             </li>
-            <li><a href="/review">Review Progress</a></li>
             <li class="has-submenu">
-              <a href="/review">Review Progress</a>
+              <a href="#">Review Progress</a>
               <ul class="submenu">
-                <li><a href="/review">Review Workouts</a></li>
-                <li><a href="/review">Review Meals</a></li>
+                <li><a href="/review_workouts">Review Workouts</a></li>
+                <li><a href="/review_meals">Review Meals</a></li>
                 <li><a href="">Review Mood?</a></li>
               </ul>
             </li>
             <li><a href="/contact">Contact</a></li>
             <li>
               {% if 'user_id' in session %}
-              <a class="account" href="{{ url_for('account_page') }}"
+              <a class="account" href="{{ url_for('account') }}"
                 >Account</a
               >
               {% else %}
-              <a class="account" href="{{ url_for('authentification_page') }}"
+              <a class="account" href="{{ url_for('authentification') }}"
                 >Account</a
               >
               {% endif %}

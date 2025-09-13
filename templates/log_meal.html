@@ -1,11 +1,8 @@
-{% extends "base.html" %} {% block main %}
-{% if not user %}
+{% extends "base.html" %} {% block main %} {% if not user %}
 <div class="logout-banner">
   You're not currently logged in. Any logged meal will be stored temporarily
   only. If you wish to keep data logged, please
-  <a href="{{ url_for('authentification_page') }}"
-    >log in or create an account</a
-  >
+  <a href="{{ url_for('authentification') }}">log in or create an account</a>
   first.
 </div>
 {% endif %}
@@ -15,10 +12,10 @@
     <form
       class="data-form"
       id="mealForm"
-      action="{{ url_for('log_meal_page') }}"
+      action="{{ url_for('log_meal') }}"
       method="POST"
     >
-      <input type="hidden" name="mealData" id="mealData">
+      <input type="hidden" name="mealData" id="mealData" />
       <div id="foodEntriesContainer">
         <div class="form-entry-row">
           <div class="form-group">
@@ -29,7 +26,7 @@
               name="meal-name"
               placeholder="e.g, Lunch"
               required
-           >
+            />
             <label for="foodName1">Food Name</label>
             <input
               type="text"
@@ -37,7 +34,7 @@
               name="foodName[]"
               placeholder="e.g., Chicken Breast"
               required
-           >
+            />
           </div>
           <div class="form-group form-secondary-group">
             <label for="foodQuantity1">Quantity (g)</label>
@@ -47,7 +44,7 @@
               name="foodQuantity[]"
               placeholder="100"
               min="1"
-           >
+            />
           </div>
         </div>
       </div>
