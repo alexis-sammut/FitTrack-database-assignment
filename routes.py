@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, session, jsonify, flash, get_flashed_messages
 from app import app, db
-from models import User, WorkoutLogged, MealsLogged, LoggedIngredient, DayLogged
+from models import User, WorkoutLogged, MealsLogged, LoggedIngredient, MoodsLogged
 import json
 import time
 import datetime
@@ -277,6 +277,20 @@ def contact():
     """Renders the contact page."""
     
     return render_template('contact.html')
+
+@app.route('/log_mood', methods=['GET'])
+def log_mood():
+    
+    """Renders the Log Mood page."""
+    
+    return render_template('log_mood.html')
+
+@app.route('/review_mood', methods=['GET'])
+def review_mood():
+    
+    """Renders the Review Mood page."""
+    
+    return render_template('log_mood.html')
 
 @app.route('/authentification', methods=['GET'])
 def authentification():

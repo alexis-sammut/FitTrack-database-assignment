@@ -1,0 +1,18 @@
+{% extends "base.html" %} {% block main %} {% if not user %}
+
+<div class="logout-banner">
+  You're not currently logged in. Any logged workout will be stored temporarily
+  only. If you wish to keep data logged, please
+  <a href="{{ url_for('authentification') }}">log in or create an account</a>
+  first.
+</div>
+{% endif %}
+<script id="review_meals">
+  const mealsData = {{ meals | tojson }};
+</script>
+<section id="stats-overview" class="section">
+  <div class="container">
+    <h2 class="review-headers">Meals</h2>
+  </div>
+</section>
+{% endblock %}

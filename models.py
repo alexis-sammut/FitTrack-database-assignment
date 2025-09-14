@@ -1,7 +1,6 @@
 from app import db
 import datetime
 
-# User table for authentication and user-specific data.
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -9,15 +8,16 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     
-    # This relationship links a user to their workouts, meals, and logged days.
+    # This relationship links a user to their workouts, meals, and logged moods.
     # The 'back_populates' creates a two-way relationship, allowing easy access between a user and their logged data.
+
     workouts = db.relationship('WorkoutLogged', back_populates='user', lazy=True)
     meals = db.relationship('MealsLogged', back_populates='user', lazy=True)
-    days = db.relationship('DayLogged', back_populates='user', lazy=True)
+    moods = db.relationship('MoodsLogged', back_populates='user', lazy=True)
 
     def __repr__(self):
         return f"<User {self.name}>"
-
+    
 # Table for logged workouts.
 class WorkoutLogged(db.Model):
     __tablename__ = 'workout_logged'
@@ -84,15 +84,15 @@ class LoggedIngredient(db.Model):
         return f"<Logged Ingredient {self.name} in Meal {self.meal_id}>"
 
 # Table for logging daily stats/mood.
-class DayLogged(db.Model):
-    __tablename__ = 'days_logged'
+class MoodsLogged(db.Model):
+    __tablename__ = 'moods_logged'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     date = db.Column(db.Date, nullable=False, unique=True, default=datetime.date.today)
     mood = db.Column(db.String(50))
     notes = db.Column(db.Text)
     # Define a one-to-many relationship with the user.
-    user = db.relationship('User', back_populates='days')
+    user = db.relationship('User', back_populates='moods')
 
     def __repr__(self):
-        return f"<Day Logged for User {self.user_id} on {self.date}>"
+        return f"<Mood Logged for User {self.user_id} on {self.date}>"

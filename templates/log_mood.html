@@ -1,0 +1,22 @@
+{% extends "base.html" %} {% block main %} {% if not user %}
+<div class="logout-banner">
+  You're not currently logged in. Any logged meal will be stored temporarily
+  only. If you wish to keep data logged, please
+  <a href="{{ url_for('authentification') }}">log in or create an account</a>
+  first.
+</div>
+{% endif %}
+<section id="log-mood" class="section">
+  <div class="container">
+    <h2>Log Your Mood</h2>
+    <form
+      id="MoodForm"
+      class="data-form"
+      action="{{ url_for('log_mood') }}"
+      method="POST"
+    >
+<button type="submit" class="button">Log Mood</button>
+</form>
+  </div>
+</section>
+{% endblock %}

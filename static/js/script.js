@@ -476,9 +476,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-
-
-  
   // Review pages
   const workoutReviewPage = document.getElementById("review_workouts");
   const mealReviewPage = document.getElementById("review_meals");
@@ -748,7 +745,6 @@ document.addEventListener("DOMContentLoaded", () => {
         div.classList.add("hidden");
       });
 
-
       if (selectedValue) {
         const statsDivToShow = document.getElementById(
           selectedValue.toLowerCase().replace(/\s/g, "") + "Stats"
@@ -776,8 +772,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (mealReviewPage) {
     const meals = typeof mealsData !== "undefined" ? mealsData : [];
 
-    //Function to display Meals into the Review page
-
+    // Function to display Meals into the Review page
     function displayLoggedMeals() {
       const container = document.getElementById("mealList");
       if (!container) return;
@@ -796,69 +791,109 @@ document.addEventListener("DOMContentLoaded", () => {
         mealEl.dataset.id = meal.id;
         mealEl.dataset.type = "meal";
 
-        const itemsHtml = meal.items
-          .map(
-            (item) => `
-                <h4 class="review-headers"><button type="button" class="show-more-button">${item.name} &gt;</button></h4>
-                <div class="stats-grid-meal">
-                    <div class="stat-box amount-colour"><p>Amount</p><div class="data"><span class="stat-value">${item.amount}</span><span class="unit">g</span></div></div>
-                    <div class="stat-box fat-colour"><p>Fat</p><div class="data"><span class="stat-value">${item.fat_total_g}</span><span class="unit">g</span></div></div>
-                    <div class="stat-box fat-colour"><p>Saturated Fat</p><div class="data"><span class="stat-value">${item.fat_saturated_g}</span><span class="unit">g</span></div></div>
-                    <div class="stat-box carbs-colour"><p>Carbs</p><div class="data"><span class="stat-value">${item.carbohydrates_total_g}</span><span class="unit">g</span></div></div>
-                    <div class="stat-box carbs-colour"><p>Fiber</p><div class="data"><span class="stat-value">${item.fiber_g}</span><span class="unit">g</span></div></div>
-                    <div class="stat-box carbs-colour"><p>Sugar</p><div class="data"><span class="stat-value">${item.sugar_g}</span><span class="unit">g</span></div></div>
-                    <div class="stat-box micronutrients-colour"><p>Sodium</p><div class="data"><span class="stat-value">${item.sodium_mg}</span><span class="unit">mg</span></div></div>
-                    <div class="stat-box micronutrients-colour"><p>Potassium</p><div class="data"><span class="stat-value">${item.potassium_mg}</span><span class="unit">mg</span></div></div>
-                    <div class="stat-box micronutrients-colour"><p>Cholesterol</p><div class="data"><span class="stat-value">${item.cholesterol_mg}</span><span class="unit">mg</span></div></div>
-                </div>
-            `
-          )
-          .join("");
+        // Build the main meal stats HTML
+        const mainStatsHtml = `
+      <div class="logged-item-header">
+        <h3 class="review-headers">${
+          meal.name.charAt(0).toUpperCase() + meal.name.slice(1)
+        }</h3>
+        <div class="logged-item-header-right">
+          <button type="button" class="remove-item-button">-</button>
+          <span>${meal.date}</span>
+        </div>
+      </div>
+      <div class="stats-grid-meal">
+        <div class="stat-box amount-colour"><p>Total Amount</p><div class="data"><span class="stat-value">${
+          meal.totalNutrients.amount
+        }</span><span class="unit">g</span></div></div>
+        <div class="stat-box fat-colour"><p>Total Fat</p><div class="data"><span class="stat-value">${
+          meal.totalNutrients.fat_total_g
+        }</span><span class="unit">g</span></div></div>
+        <div class="stat-box fat-colour"><p>Total Saturated Fat</p><div class="data"><span class="stat-value">${
+          meal.totalNutrients.fat_saturated_g
+        }</span><span class="unit">g</span></div></div>
+        <div class="stat-box carbs-colour"><p>Total Carbs</p><div class="data"><span class="stat-value">${
+          meal.totalNutrients.carbohydrates_total_g
+        }</span><span class="unit">g</span></div></div>
+        <div class="stat-box carbs-colour"><p>Total Fiber</p><div class="data"><span class="stat-value">${
+          meal.totalNutrients.fiber_g
+        }</span><span class="unit">g</span></div></div>
+        <div class="stat-box carbs-colour"><p>Total Sugar</p><div class="data"><span class="stat-value">${
+          meal.totalNutrients.sugar_g
+        }</span><span class="unit">g</span></div></div>
+        <div class="stat-box micronutrients-colour"><p>Total Sodium</p><div class="data"><span class="stat-value">${
+          meal.totalNutrients.sodium_mg
+        }</span><span class="unit">mg</span></div></div>
+        <div class="stat-box micronutrients-colour"><p>Total Potassium</p><div class="data"><span class="stat-value">${
+          meal.totalNutrients.potassium_mg
+        }</span><span class="unit">mg</span></div></div>
+        <div class="stat-box micronutrients-colour"><p>Total Cholesterol</p><div class="data"><span class="stat-value">${
+          meal.totalNutrients.cholesterol_mg
+        }</span><span class="unit">mg</span></div></div>
+      </div>
+    `;
 
-        mealEl.innerHTML = `
-              <div class="logged-item-header">
-                <h3 class="review-headers">${
-                  meal.name.charAt(0).toUpperCase() + meal.name.slice(1)
-                }</h3>
-                <div class="logged-item-header-right">
-                    <button type="button" class="remove-item-button">-</button>
-                    <span>${meal.date}</span>
-                </div>
-              </div>
-              <div class="stats-grid-meal">
-                <div class="stat-box amount-colour"><p>Total Amount</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.amount
-                }</span><span class="unit">g</span></div></div>
-                <div class="stat-box fat-colour"><p>Total Fat</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.fat_total_g
-                }</span><span class="unit">g</span></div></div>
-                <div class="stat-box fat-colour"><p>Total Saturated Fat</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.fat_saturated_g
-                }</span><span class="unit">g</span></div></div>
-                <div class="stat-box carbs-colour"><p>Total Carbs</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.carbohydrates_total_g
-                }</span><span class="unit">g</span></div></div>
-                <div class="stat-box carbs-colour"><p>Total Fiber</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.fiber_g
-                }</span><span class="unit">g</span></div></div>
-                <div class="stat-box carbs-colour"><p>Total Sugar</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.sugar_g
-                }</span><span class="unit">g</span></div></div>
-                <div class="stat-box micronutrients-colour"><p>Total Sodium</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.sodium_mg
-                }</span><span class="unit">mg</span></div></div>
-                <div class="stat-box micronutrients-colour"><p>Total Potassium</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.potassium_mg
-                }</span><span class="unit">mg</span></div></div>
-                <div class="stat-box micronutrients-colour"><p>Total Cholesterol</p><div class="data"><span class="stat-value">${
-                  meal.totalNutrients.cholesterol_mg
-                }</span><span class="unit">mg</span></div></div>
-              </div>
-              <h4 class="review-headers"><button type="button" class="show-more-button">Show nutrients per item &gt;</button></h4>
-              <div>${itemsHtml}</div>
-            `;
+        // Create the dropdown and details container
+        const ingredientsHtml = `
+      <div class="form-group review-workout">
+        <select id="ingredient-select-${meal.id}" class="ingredient-dropdown">
+          <option value="">-- Choose an ingredient --</option>
+          ${meal.items
+            .map(
+              (item, index) => `<option value="${index}">${item.name}</option>`
+            )
+            .join("")}
+        </select>
+      </div>
+      <div id="ingredient-details-${meal.id}" class="stats-grid-meal hidden">
+        </div>
+    `;
+
+        mealEl.innerHTML = mainStatsHtml + ingredientsHtml;
         container.appendChild(mealEl);
       });
+
+      // Attach event listeners to the new dropdowns
+      document.querySelectorAll(".ingredient-dropdown").forEach((dropdown) => {
+        dropdown.addEventListener("change", (e) => {
+          const selectedIndex = e.target.value;
+          const mealEl = e.target.closest(".logged-item-container");
+          const mealId = mealEl.dataset.id;
+          const mealData = meals.find((m) => m.id == mealId);
+          const ingredientDetailsContainer = document.getElementById(
+            `ingredient-details-${mealId}`
+          );
+
+          // If an ingredient is selected
+          if (selectedIndex !== "") {
+            const selectedIngredient = mealData.items[selectedIndex];
+            populateIngredientDetails(
+              ingredientDetailsContainer,
+              selectedIngredient
+            );
+            ingredientDetailsContainer.classList.remove("hidden");
+          } else {
+            // If "Choose an ingredient" is selected
+            ingredientDetailsContainer.classList.add("hidden");
+            ingredientDetailsContainer.innerHTML = "";
+          }
+        });
+      });
+    }
+
+    // New function to populate the ingredient details container
+    function populateIngredientDetails(container, item) {
+      container.innerHTML = `
+    <div class="stat-box amount-colour"><p>Amount</p><div class="data"><span class="stat-value">${item.amount}</span><span class="unit">g</span></div></div>
+    <div class="stat-box fat-colour"><p>Fat</p><div class="data"><span class="stat-value">${item.fat_total_g}</span><span class="unit">g</span></div></div>
+    <div class="stat-box fat-colour"><p>Saturated Fat</p><div class="data"><span class="stat-value">${item.fat_saturated_g}</span><span class="unit">g</span></div></div>
+    <div class="stat-box carbs-colour"><p>Carbs</p><div class="data"><span class="stat-value">${item.carbohydrates_total_g}</span><span class="unit">g</span></div></div>
+    <div class="stat-box carbs-colour"><p>Fiber</p><div class="data"><span class="stat-value">${item.fiber_g}</span><span class="unit">g</span></div></div>
+    <div class="stat-box carbs-colour"><p>Sugar</p><div class="data"><span class="stat-value">${item.sugar_g}</span><span class="unit">g</span></div></div>
+    <div class="stat-box micronutrients-colour"><p>Sodium</p><div class="data"><span class="stat-value">${item.sodium_mg}</span><span class="unit">mg</span></div></div>
+    <div class="stat-box micronutrients-colour"><p>Potassium</p><div class="data"><span class="stat-value">${item.potassium_mg}</span><span class="unit">mg</span></div></div>
+    <div class="stat-box micronutrients-colour"><p>Cholesterol</p><div class="data"><span class="stat-value">${item.cholesterol_mg}</span><span class="unit">mg</span></div></div>
+  `;
     }
 
     // Function to remove logged workout/meals
@@ -1004,14 +1039,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-
-
-
-
-
-
-
-
 
   // Functions to work across mutliple pages
   // Function to clear form inputs for Log Workout, Log Meal and Contact form
@@ -1193,4 +1220,7 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
     }
   }
+
+
+  
 });

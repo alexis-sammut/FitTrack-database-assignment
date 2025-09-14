@@ -1,11 +1,8 @@
-{% extends "base.html" %} {% block main %}
-{% if not user %}
+{% extends "base.html" %} {% block main %} {% if not user %}
 <div class="logout-banner">
   You're not currently logged in. Any logged meal will be stored temporarily
   only. If you wish to keep data logged, please
-  <a href="{{ url_for('authentification') }}"
-    >log in or create an account</a
-  >
+  <a href="{{ url_for('authentification') }}">log in or create an account</a>
   first.
 </div>
 {% endif %}
@@ -80,7 +77,7 @@
         </p>
       </div>
 
-      <button type="submit" class="button">Log Workout</button>
+  
       <button type="button" id="resetForm" class="button secondary-button">
         Reset Form
       </button>
