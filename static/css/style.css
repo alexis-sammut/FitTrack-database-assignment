@@ -101,7 +101,7 @@ header nav ul li a:hover::after {
 }
 
 .has-submenu:hover > .submenu {
-  display: block; 
+  display: block;
 }
 
 header .container::after {
@@ -305,22 +305,22 @@ main {
 /* Account page */
 
 .data-forms {
-  max-width: 600px; 
+  max-width: 600px;
   margin: 20px auto;
   background-color: #f9f9f9;
-  border-radius: 0; 
+  border-radius: 0;
   box-shadow: none;
   padding: 0;
 }
 
 .settings-list {
-  list-style: none; 
+  list-style: none;
   margin: 0;
   padding: 0;
   background-color: transparent;
-  border-radius: 10px; 
-  overflow: hidden; 
-  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.05); 
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .settings-list li {
@@ -328,32 +328,32 @@ main {
 }
 
 .settings-list li:last-child {
-  border-bottom: none; 
+  border-bottom: none;
 }
 
 .settings-row {
   display: flex;
-  align-items: center; 
+  align-items: center;
   width: 100%;
-  padding: 12px 15px; 
+  padding: 12px 15px;
   background-color: #fff;
   border: none;
   text-align: left;
   cursor: pointer;
-  font-size: 17px; 
+  font-size: 17px;
   color: #000;
-  transition: background-color 0.2s ease; 
+  transition: background-color 0.2s ease;
 }
 
 .settings-row:hover {
-  background-color: #e0e0e0; 
+  background-color: #e0e0e0;
 }
 
 .settings-row img {
   width: 28px;
   height: 28px;
-  margin-right: 15px; 
-  border-radius: 6px; 
+  margin-right: 15px;
+  border-radius: 6px;
 }
 
 .popup-form {
@@ -376,7 +376,7 @@ main {
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   width: 80%;
-  max-width: 400px; 
+  max-width: 400px;
   position: relative;
 }
 
@@ -419,7 +419,7 @@ main {
 }
 
 /* Log workout page */
-.logout-banner{
+.logout-banner {
   text-align: center;
   color: #2c3e50;
 }
@@ -793,9 +793,62 @@ main {
   margin-top: 20px;
 }
 
-.review-workout{
+.review-workout {
   max-width: 250px;
 }
+
+/* Log Mood Page */
+
+.mood-container {
+  width: 380px;
+  height: 380px;
+  position: relative;
+  background: radial-gradient(
+    circle at center,
+    #ef4444 0%,
+    #8b5cf6 30%,
+    #3b82f6 50%,
+    #22c55e 100%
+  );
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.centered{
+display: flex;
+justify-content: center;
+align-items: center
+}
+
+#moodInfo {
+  text-align: center;
+  margin: 0 auto;
+  width: 100%; 
+  color: #2c3e50;
+  font-size: 1.2em;
+  font-weight:bold;
+}
+
+.mood-highlight {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  z-index: 5;
+  border: 4px solid transparent;
+}
+
+.mood-notes {
+  margin-top: 2rem;
+  width: 100%;
+  max-width: 400px;
+}
+
 
 /* Contact Page */
 .form-intro {
@@ -831,11 +884,6 @@ footer {
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
   font-size: 0.9rem;
 }
-
-
-
-
-
 
 /* Media ports */
 @media (max-width: 768px) {
@@ -893,6 +941,33 @@ footer {
     width: calc(100% - 20px);
   }
 }
+
+/* Review Mood page */
+.mood-colour p {
+  color: #a05a2e;
+  font-weight: bolder;
+}
+
+.mood-colour .stat-value {
+  color: #d1955b;
+}
+
+.stat-value-notes {
+  font-size: 1.2em;
+  font-weight: 500;
+  display: block;
+  color: #333;
+}
+
+.note-colour p {
+  color: #555;
+  font-weight: bolder;
+}
+
+.note-colour .stat-value {
+  color: #777;
+}
+
 
 @media (max-width: 480px) {
   header nav ul li {

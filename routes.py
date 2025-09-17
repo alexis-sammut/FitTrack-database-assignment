@@ -4,6 +4,7 @@ from models import User, WorkoutLogged, MealsLogged, LoggedIngredient, MoodsLogg
 import json
 import time
 import datetime
+from datetime import timedelta
 
 @app.route('/', methods=['GET'])
 def index():
@@ -168,6 +169,7 @@ def review_workouts():
             {
                 'id': w.id,
                 'type': w.workout_type,
+                'date': w.date.isoformat(),
                 'duration': w.duration,
                 'distance': w.distance,
                 'pace': w.pace,
@@ -253,6 +255,8 @@ def delete_item():
                 if item_to_delete:
                     # Delete associated ingredients first
                     LoggedIngredient.query.filter_by(meal_id=item_to_delete.id).delete()
+            elif item_type == 'mood':
+                 item_to_delete = MoodsLogged.query.filter_by(id=item_id, user_id=user_id).first()
             
             if item_to_delete:
                 db.session.delete(item_to_delete)
@@ -278,20 +282,100 @@ def contact():
     
     return render_template('contact.html')
 
-@app.route('/log_mood', methods=['GET'])
+@app.route('/log_mood', methods=['GET', 'POST'])
 def log_mood():
+    """Renders the Log Mood page and handles mood form submission."""
     
-    """Renders the Log Mood page."""
-    
-    return render_template('log_mood.html')
+    user = None
+    if 'user_id' in session:
+        user = User.query.get(session.get('user_id'))
 
+    if request.method == 'POST':
+        mood_rating = request.form.get('moodRating')
+        notes = request.form.get('notes')
+        user_id = session.get('user_id')
+
+        if user_id:
+            try:
+                # Convert the mood rating to an integer
+                mood_rating_int = int(mood_rating)
+        
+                # Check if a mood for today already exists for the user
+                today = datetime.date.today()
+                existing_mood = MoodsLogged.query.filter_by(user_id=user_id, date=today).first()
+
+                if existing_mood:
+                    # If it exists, update the existing entry
+                    existing_mood.mood = mood_rating_int
+                    existing_mood.notes = notes
+                    flash("Mood updated successfully!", "success")
+                else:
+                    # If not, create a new entry
+                    new_mood = MoodsLogged(
+                        user_id=user_id,
+                        mood=mood_rating_int,
+                        notes=notes
+                    )
+                    db.session.add(new_mood)
+                    flash("Mood logged successfully!", "success")
+
+                db.session.commit()
+
+            except Exception as e:
+                db.session.rollback()
+                print(f"Error saving mood to database: {e}")
+                flash("An error occurred. Please try again.", "error")
+        else:
+            # Logic for non-logged-in users
+            if 'moods' not in session:
+                session['moods'] = []
+            
+            new_session_mood = {
+                'mood': mood_rating,
+                'notes': notes,
+                'date': datetime.date.today().isoformat(),
+                'id': int(time.time() * 1000)
+            }
+            session['moods'].append(new_session_mood)
+            session.modified = True
+            
+        return redirect(url_for('review_mood'))
+
+    return render_template('log_mood.html', user=user)
+
+# routes.py
 @app.route('/review_mood', methods=['GET'])
 def review_mood():
-    
-    """Renders the Review Mood page."""
-    
-    return render_template('log_mood.html')
+    """Renders the Review Mood page and retrieves logged mood data."""
+    user = None
+    moods = [] # Use a list for consistency
+    if 'user_id' in session:
+        user = User.query.get(session.get('user_id'))
+        if user:
+            # Retrieve moods logged by the user, sorted by date
+            logged_moods = MoodsLogged.query.filter_by(user_id=user.id).order_by(MoodsLogged.date.desc()).all()
 
+            # Format moods for easy access in the template
+            moods = [
+                {
+                    'id': mood.id,
+                    'mood': mood.mood,
+                    'notes': mood.notes,
+                    'date': mood.date.strftime('%Y-%m-%d')
+                } for mood in logged_moods
+            ]
+    else:
+        # For non-logged-in users, retrieve moods from the session
+        moods = session.get('moods', [])
+
+    return render_template(
+        'review_mood.html',
+        user=user,
+        moods=moods,
+        timedelta=timedelta,
+        now=datetime.date.today()
+    )
+    
 @app.route('/authentification', methods=['GET'])
 def authentification():
 

@@ -10,13 +10,28 @@
   <div class="container">
     <h2>Log Your Mood</h2>
     <form
-      id="MoodForm"
       class="data-form"
+      id="moodForm"
       action="{{ url_for('log_mood') }}"
-      method="POST"
+      method="post"
     >
-<button type="submit" class="button">Log Mood</button>
-</form>
+      <input type="hidden" id="moodRating" name="moodRating" />
+      <div class="form-group centered">
+        <div class="mood-container" id="moodContainer">
+          <div id="moodHighlight" class="mood-highlight"></div>
+        </div>
+      </div>
+      <div id="moodInfo">
+        <p id="moodRatingDisplay"></p>
+        <span id="moodLabel"></span>
+      </div>
+      <div class="form-group">
+        <label for="notes">Notes about your day:</label>
+        <textarea id="notes" name="notes" rows="4" class=""></textarea>
+      </div>
+      <button type="submit" class="button">Log Mood</button>
+    </form>
   </div>
 </section>
+
 {% endblock %}

@@ -1,10 +1,230 @@
 // Loading script only when all the DOM has been loaded completely
 document.addEventListener("DOMContentLoaded", () => {
-  // Log Workout page
-
   const workoutForm = document.getElementById("workoutForm");
-  // Making sure the Workout functions are only called on the Log Workout page
-  // Referencing Log Workout items
+  const mealForm = document.getElementById("mealForm");
+  const moodForm = document.getElementById("moodForm");
+
+  // Functions to work across mutliple pages
+  // Function to clear form inputs for Log Workout, Log Meal and Contact form
+
+  const resetFormButton = document.getElementById("resetForm");
+  if (resetFormButton) {
+    resetFormButton.addEventListener("click", () => {
+      const form = resetFormButton.closest("form");
+      if (form) form.reset();
+      if (document.getElementById("workoutForm")) {
+        document
+          .getElementById("workoutType")
+          .dispatchEvent(new Event("change"));
+      }
+      if (document.getElementById("mealForm")) {
+        document.getElementById("nutritionTable").innerHTML = "";
+        document.getElementById("nutritionTableContainer").style.display =
+          "none";
+        document.getElementById("logMealButton").style.display = "none";
+      }
+    });
+  }
+
+  const contactForm = document.getElementById("contactForm");
+  if (contactForm) {
+    contactForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      let nameEntered = document.getElementById("name").value.trim();
+      if (nameEntered) {
+        nameEntered =
+          nameEntered.charAt(0).toUpperCase() + nameEntered.slice(1);
+      }
+
+      contactForm.style.display = "none";
+      document.getElementById("formTitle").innerHTML = "<h2>Thank You!</h2>";
+      document.getElementById(
+        "formIntro"
+      ).innerHTML = `<p>Thank you ${nameEntered} for sharing your thoughts!</p>`;
+    });
+  }
+
+  // Authentification page
+  // Referencing items
+  const loginTab = document.getElementById("loginTab");
+  const createAccountTab = document.getElementById("createAccountTab");
+  const loginForm = document.getElementById("loginForm");
+  const createAccountForm = document.getElementById("createAccountForm");
+
+  // Function to switch between login and create account forms
+  function formSwitcher() {
+    loginTab.classList.toggle("active");
+    createAccountTab.classList.toggle("active");
+    loginForm.classList.toggle("hidden-form");
+    createAccountForm.classList.toggle("hidden-form");
+  }
+
+  // Function to clear flash messages
+  function clearFlashMessages() {
+    const successMessages = document.querySelectorAll(".flash");
+    successMessages.forEach((element) => {
+      element.remove();
+    });
+  }
+
+  // Add event listeners for the tab buttons to switch form, and hide message
+  if (loginTab && createAccountTab) {
+    loginTab.addEventListener("click", () => {
+      formSwitcher();
+      clearFlashMessages();
+    });
+    createAccountTab.addEventListener("click", () => {
+      formSwitcher();
+      clearFlashMessages();
+    });
+  }
+
+  // Check the URL for a parameter to automatically switch to the Create Account form
+  const urlParams = new URLSearchParams(window.location.search);
+  const showRegisterForm = urlParams.get("show_register");
+
+  if (showRegisterForm === "true") {
+    if (loginForm.classList.contains("hidden-form") === false) {
+      formSwitcher();
+    }
+  }
+
+  // Account page
+  // Referencing items
+  const changePasswordBtn = document.getElementById("changePasswordBtn");
+  if (changePasswordBtn) {
+    const changeAccountInfoBtn = document.getElementById(
+      "changeAccountInfoBtn"
+    );
+    const logoutBtn = document.getElementById("logoutBtn");
+    const deleteAccountBtn = document.getElementById("deleteAccountBtn");
+
+    const passwordPopupForm = document.getElementById("popupPasswordForm");
+    const accountInfoPopupForm = document.getElementById(
+      "accountInfoPopupForm"
+    );
+    const logoutPopupForm = document.getElementById("logoutPopupForm");
+    const deleteAccountPopupForm = document.getElementById(
+      "deleteAccountPopupForm"
+    );
+
+    // A list of all pop-up forms
+    const allpopupForms = [
+      passwordPopupForm,
+      accountInfoPopupForm,
+      logoutPopupForm,
+      deleteAccountPopupForm,
+    ];
+
+    // Function to show a popup form and prevent background scrolling
+    function showPopupForm(popupForm) {
+      if (popupForm) {
+        popupForm.style.display = "flex";
+        document.body.style.overflow = "hidden";
+      }
+    }
+
+    // Function to hide all popup forms and re-enable scrolling
+    function hideAllPopupForms() {
+      allpopupForms.forEach((popupForm) => {
+        if (popupForm) {
+          popupForm.style.display = "none";
+        }
+      });
+      document.body.style.overflow = "auto";
+    }
+
+    // Event listeners to show the correct pop-up on button click
+    changePasswordBtn.onclick = function () {
+      showPopupForm(passwordPopupForm);
+    };
+
+    changeAccountInfoBtn.onclick = function () {
+      showPopupForm(accountInfoPopupForm);
+    };
+
+    logoutBtn.onclick = function () {
+      showPopupForm(logoutPopupForm);
+    };
+
+    deleteAccountBtn.onclick = function () {
+      showPopupForm(deleteAccountPopupForm);
+    };
+
+    // Event listener for all close buttons to hide the pop-up
+    const closeBtns = document.querySelectorAll(".close-button");
+    closeBtns.forEach((btn) => {
+      btn.onclick = function () {
+        hideAllPopupForms();
+        clearFlashMessages();
+      };
+    });
+
+    // When the user clicks anywhere outside of a popup form, close it
+    window.onclick = function (event) {
+      if (event.target.classList.contains("popup-form")) {
+        hideAllPopupForms();
+        clearFlashMessages();
+      }
+    };
+
+    // Check the URL for a parameter to automatically switch to the correct popup form
+    const urlParamPopupForm = new URLSearchParams(window.location.search);
+    const showForm = urlParamPopupForm.get("show_form");
+
+    if (showForm) {
+      switch (showForm) {
+        case "password":
+          showPopupForm(passwordPopupForm);
+          break;
+        case "account":
+          showPopupForm(accountInfoPopupForm);
+          break;
+        case "logout":
+          showPopupForm(logoutPopupForm);
+          break;
+        case "delete":
+          showPopupForm(deleteAccountPopupForm);
+          break;
+      }
+    }
+  }
+
+  // Review pages
+  const workoutReviewPage = document.getElementById("review_workouts");
+  const mealReviewPage = document.getElementById("review_meals");
+  const moodReviewPage = document.getElementById("review_moods");
+
+  const updateTextContent = (id, value) => {
+    const element = document.getElementById(id);
+    if (element) element.textContent = value;
+  };
+
+  // Function to remove logged workout/meals
+  async function handleRemoveItem(event) {
+    const itemContainer = event.target.closest(".logged-item-container");
+    if (!itemContainer) return;
+
+    const itemId = parseInt(itemContainer.dataset.id, 10);
+    const itemType = itemContainer.dataset.type;
+
+    try {
+      const response = await fetch("/delete_item", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ item_type: itemType, item_id: itemId }),
+      });
+      const result = await response.json();
+      if (result.success) {
+        window.location.reload();
+      } else {
+        console.error("Failed to delete item:", result.message);
+      }
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  }
 
   if (workoutForm) {
     const workoutType = document.getElementById("workoutType");
@@ -239,9 +459,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Log meal page
 
-  const mealForm = document.getElementById("mealForm");
-  // Making sure the Meal functions are only called on the Log Meal page
-  // Referencing Log Meal items
   if (mealForm) {
     const addFoodItemBtn = document.getElementById("addFoodItemBtn");
     const fieldErrorMessage = document.getElementById("addFieldError");
@@ -476,12 +693,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Review pages
-  const workoutReviewPage = document.getElementById("review_workouts");
-  const mealReviewPage = document.getElementById("review_meals");
-
   if (workoutReviewPage) {
     const workouts = typeof workoutsData !== "undefined" ? workoutsData : [];
+
+    // Event listener to remove logged workout
+    document
+      .getElementById("workoutList")
+      .addEventListener("click", function (e) {
+        if (e.target.classList.contains("remove-item-button")) {
+          handleRemoveItem(e);
+        }
+      });
 
     //Function to display Workouts into the Review page
     function displayLoggedWorkouts() {
@@ -494,7 +716,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       container.innerHTML = "";
-      workouts.sort((a, b) => b.id - a.id);
+      workouts.sort((a, b) => {
+        // Sort by date for logged-in users, otherwise by ID (timestamp)
+        const dateA = new Date(a.date || a.id);
+        const dateB = new Date(b.date || b.id);
+        return dateB - dateA;
+      });
 
       workouts.forEach((workout) => {
         const workoutEl = document.createElement("div");
@@ -503,79 +730,47 @@ document.addEventListener("DOMContentLoaded", () => {
         workoutEl.dataset.type = "workout";
 
         let detailsHtml = `
-          <div class="stat-box minute-colour"><p>Duration</p><div class="data"><span class="stat-value">${
-            workout.duration
-          }</span><span class="unit">min</span></div></div>
-          <div class="stat-box cals-colour"><p>Calories Burnt</p><div class="data"><span class="stat-value">${Math.round(
-            workout.calories
-          )}</span><span class="unit">kcal</span></div></div>
+            <div class="stat-box minute-colour"><p>Duration</p><div class="data"><span class="stat-value">${
+              workout.duration
+            }</span><span class="unit">min</span></div></div>
+            <div class="stat-box cals-colour"><p>Calories Burnt</p><div class="data"><span class="stat-value">${Math.round(
+              workout.calories
+            )}</span><span class="unit">kcal</span></div></div>
         `;
         if (workout.distance) {
           detailsHtml += `
-            <div class="stat-box distance-colour"><p>Distance</p><div class="data"><span class="stat-value">${
-              workout.distance
-            }</span><span class="unit">km</span></div></div>
-            <div class="stat-box pace-colour"><p>Pace</p><div class="data"><span class="stat-value">${formatPaceToMinSec(
-              parseFloat(workout.pace)
-            )}</span><span class="unit">min/km</span></div></div>
-          `;
+                <div class="stat-box distance-colour"><p>Distance</p><div class="data"><span class="stat-value">${
+                  workout.distance
+                }</span><span class="unit">km</span></div></div>
+                <div class="stat-box pace-colour"><p>Pace</p><div class="data"><span class="stat-value">${formatPaceToMinSec(
+                  parseFloat(workout.pace)
+                )}</span><span class="unit">min/km</span></div></div>
+            `;
         }
         if (workout.intensity) {
           detailsHtml += `<div class="stat-box intensity-colour"><p>Intensity</p><span class="stat-value">${workout.intensity}</span></div>`;
         }
 
-        const workoutDate = new Date(workout.id).toLocaleDateString("en-GB", {
+        const workoutDate = new Date(
+          workout.date || workout.id
+        ).toLocaleDateString("en-GB", {
           day: "2-digit",
           month: "short",
           year: "numeric",
         });
         workoutEl.innerHTML = `
-          <div class="logged-item-header">
-              <h3 class="review-headers">${workout.type}</h3>
-              <div class="logged-item-header-right">
-               <button type="button" class="remove-item-button">-</button>
-               <span>${workoutDate}</span>
-               </div>
-          </div>
-          <div class="stats-grid">${detailsHtml}</div>
+            <div class="logged-item-header">
+                <h3 class="review-headers">${workout.type}</h3>
+                <div class="logged-item-header-right">
+                    <button type="button" class="remove-item-button">-</button>
+                    <span>${workoutDate}</span>
+                </div>
+            </div>
+            <div class="stats-grid">${detailsHtml}</div>
         `;
         container.appendChild(workoutEl);
       });
     }
-
-    // Function to remove logged workout/meals
-
-    async function handleRemoveItem(event) {
-      const itemContainer = event.target.closest(".logged-item-container");
-      if (!itemContainer) return;
-
-      const itemId = parseInt(itemContainer.dataset.id, 10);
-      const itemType = itemContainer.dataset.type;
-
-      try {
-        const response = await fetch("/delete_item", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ item_type: itemType, item_id: itemId }),
-        });
-        const result = await response.json();
-        if (result.success) {
-          window.location.reload();
-        } else {
-          console.error("Failed to delete item:", result.message);
-        }
-      } catch (error) {
-        console.error("Error deleting item:", error);
-      }
-    }
-
-    document
-      .getElementById("workoutList")
-      .addEventListener("click", function (e) {
-        if (e.target.classList.contains("remove-item-button")) {
-          handleRemoveItem(e);
-        }
-      });
 
     // Object to map the workout type with their 'prefix' id that will help for the logic
 
@@ -590,11 +785,6 @@ document.addEventListener("DOMContentLoaded", () => {
       Pilates: "pilates",
       HIIT: "hiits",
       "Strength Training": "strength",
-    };
-
-    const updateTextContent = (id, value) => {
-      const element = document.getElementById(id);
-      if (element) element.textContent = value;
     };
 
     // Function to calculate and display the appropriate overview for workouts
@@ -772,6 +962,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if (mealReviewPage) {
     const meals = typeof mealsData !== "undefined" ? mealsData : [];
 
+    // Event listener to remove logged meals
+    document.getElementById("mealList").addEventListener("click", function (e) {
+      if (e.target.classList.contains("remove-item-button")) {
+        handleRemoveItem(e);
+      }
+    });
+
     // Function to display Meals into the Review page
     function displayLoggedMeals() {
       const container = document.getElementById("mealList");
@@ -896,38 +1093,6 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
     }
 
-    // Function to remove logged workout/meals
-
-    async function handleRemoveItem(event) {
-      const itemContainer = event.target.closest(".logged-item-container");
-      if (!itemContainer) return;
-
-      const itemId = parseInt(itemContainer.dataset.id, 10);
-      const itemType = itemContainer.dataset.type;
-
-      try {
-        const response = await fetch("/delete_item", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ item_type: itemType, item_id: itemId }),
-        });
-        const result = await response.json();
-        if (result.success) {
-          window.location.reload();
-        } else {
-          console.error("Failed to delete item:", result.message);
-        }
-      } catch (error) {
-        console.error("Error deleting item:", error);
-      }
-    }
-
-    document.getElementById("mealList").addEventListener("click", function (e) {
-      if (e.target.classList.contains("remove-item-button")) {
-        handleRemoveItem(e);
-      }
-    });
-
     // Function to calculate and display the appropriate overview for meals
 
     function updateMealStats(meals) {
@@ -1040,187 +1205,225 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Functions to work across mutliple pages
-  // Function to clear form inputs for Log Workout, Log Meal and Contact form
+  if (moodReviewPage) {
+    // The moodsData is now consistently an array from the Flask route
+    const moods = moodsData;
 
-  const resetFormButton = document.getElementById("resetForm");
-  if (resetFormButton) {
-    resetFormButton.addEventListener("click", () => {
-      const form = resetFormButton.closest("form");
-      if (form) form.reset();
-      if (document.getElementById("workoutForm")) {
-        document
-          .getElementById("workoutType")
-          .dispatchEvent(new Event("change"));
-      }
-      if (document.getElementById("mealForm")) {
-        document.getElementById("nutritionTable").innerHTML = "";
-        document.getElementById("nutritionTableContainer").style.display =
-          "none";
-        document.getElementById("logMealButton").style.display = "none";
+    // Event listener to remove logged moods
+    document.getElementById("moodList").addEventListener("click", function (e) {
+      if (e.target.classList.contains("remove-item-button")) {
+        handleRemoveItem(e);
       }
     });
-  }
 
-  const contactForm = document.getElementById("contactForm");
-  if (contactForm) {
-    contactForm.addEventListener("submit", function (event) {
-      event.preventDefault();
+    // Function to calculate and display the appropriate overview for moods
+    function updateMoodStats(moods) {
+      const moodValues = moods.map((mood) => parseInt(mood.mood));
+      const totalMoods = moodValues.length;
 
-      let nameEntered = document.getElementById("name").value.trim();
-      if (nameEntered) {
-        nameEntered =
-          nameEntered.charAt(0).toUpperCase() + nameEntered.slice(1);
+      // If all moods are removed, reset the overview to zero
+      if (totalMoods === 0) {
+        updateTextContent("avg-mood", "0");
+        updateTextContent("total-moods", "0");
+        return;
       }
 
-      contactForm.style.display = "none";
-      document.getElementById("formTitle").innerHTML = "<h2>Thank You!</h2>";
-      document.getElementById(
-        "formIntro"
-      ).innerHTML = `<p>Thank you ${nameEntered} for sharing your thoughts!</p>`;
-    });
-  }
+      // Calculate the average mood
+      const totalMoodSum = moodValues.reduce((sum, mood) => sum + mood, 0);
+      const avgMood = totalMoodSum / totalMoods;
 
-  // Authentification page
-  // Referencing items
-  const loginTab = document.getElementById("loginTab");
-  const createAccountTab = document.getElementById("createAccountTab");
-  const loginForm = document.getElementById("loginForm");
-  const createAccountForm = document.getElementById("createAccountForm");
-
-  // Function to switch between login and create account forms
-  function formSwitcher() {
-    loginTab.classList.toggle("active");
-    createAccountTab.classList.toggle("active");
-    loginForm.classList.toggle("hidden-form");
-    createAccountForm.classList.toggle("hidden-form");
-  }
-
-  // Function to clear flash messages
-  function clearFlashMessages() {
-    const successMessages = document.querySelectorAll(".flash");
-    successMessages.forEach((element) => {
-      element.remove();
-    });
-  }
-
-  // Add event listeners for the tab buttons to switch form, and hide message
-  if (loginTab && createAccountTab) {
-    loginTab.addEventListener("click", () => {
-      formSwitcher();
-      clearFlashMessages();
-    });
-    createAccountTab.addEventListener("click", () => {
-      formSwitcher();
-      clearFlashMessages();
-    });
-  }
-
-  // Check the URL for a parameter to automatically switch to the Create Account form
-  const urlParams = new URLSearchParams(window.location.search);
-  const showRegisterForm = urlParams.get("show_register");
-
-  if (showRegisterForm === "true") {
-    if (loginForm.classList.contains("hidden-form") === false) {
-      formSwitcher();
+      updateTextContent("avg-mood", avgMood.toFixed(1));
+      updateTextContent("total-moods", totalMoods);
     }
-  }
 
-  // Account page
-  // Referencing items
-  const changePasswordBtn = document.getElementById("changePasswordBtn");
-  const changeAccountInfoBtn = document.getElementById("changeAccountInfoBtn");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const deleteAccountBtn = document.getElementById("deleteAccountBtn");
+    // Function to display Moods into the Review page
+    function displayLoggedMoods() {
+      const container = document.getElementById("moodList");
+      if (!container) return;
 
-  const passwordPopupForm = document.getElementById("popupPasswordForm");
-  const accountInfoPopupForm = document.getElementById("accountInfoPopupForm");
-  const logoutPopupForm = document.getElementById("logoutPopupForm");
-  const deleteAccountPopupForm = document.getElementById(
-    "deleteAccountPopupForm"
-  );
+      const sortedMoods = moods.sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
 
-  // A list of all pop-up forms
-  const allpopupForms = [
-    passwordPopupForm,
-    accountInfoPopupForm,
-    logoutPopupForm,
-    deleteAccountPopupForm,
-  ];
+      if (sortedMoods.length === 0) {
+        container.innerHTML = `<p class="no-data-message">No moods logged yet. <a href="/log_mood">Log one now!</a></p>`;
+        return;
+      }
+      container.innerHTML = "";
 
-  // Function to show a popup form and prevent background scrolling
-  function showPopupForm(popupForm) {
-    if (popupForm) {
-      popupForm.style.display = "flex";
-      document.body.style.overflow = "hidden";
+      sortedMoods.forEach((moodData) => {
+        const moodEl = document.createElement("div");
+        moodEl.classList.add("logged-item-container");
+        moodEl.dataset.id = moodData.id;
+        moodEl.dataset.type = "mood";
+
+        const moodDate = new Date(moodData.date).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+
+        moodEl.innerHTML = `
+          <div class="logged-item-header">
+            <h3 class="review-headers">${moodDate}</h3>
+            <div class="logged-item-header-right">
+              <button type="button" class="remove-item-button">-</button>
+            </div>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-box mood-colour">
+              <p>Rating</p>
+              <span class="stat-value">${moodData.mood}</span>
+            </div>
+            ${
+              moodData.notes
+                ? `
+            <div class="stat-box note-colour">
+              <p>Notes</p>
+              <span class="stat-value-notes">${moodData.notes}</span>
+            </div>`
+                : ""
+            }
+          </div>
+        `;
+        container.appendChild(moodEl);
+      });
     }
+
+    updateMoodStats(moods);
+    displayLoggedMoods();
   }
 
-  // Function to hide all popup forms and re-enable scrolling
-  function hideAllPopupForms() {
-    allpopupForms.forEach((popupForm) => {
-      if (popupForm) {
-        popupForm.style.display = "none";
+  // Log Mood page logic
+  if (moodForm) {
+    const container = document.getElementById("moodContainer");
+    const display = document.getElementById("moodRatingDisplay");
+    const input = document.getElementById("moodRating");
+    const label = document.getElementById("moodLabel");
+    const notes = document.getElementById("notes");
+    const highlight = document.getElementById("moodHighlight");
+    const moodInfo = document.getElementById("moodInfo");
+
+    let isLocked = false;
+    const containerRadius = container.offsetWidth / 2;
+
+    const moodLabels = [
+      "Terrible",
+      "Bad",
+      "Bored",
+      "Tired",
+      "Neutral",
+      "Fine",
+      "Good",
+      "Great",
+      "Awesome",
+      "Excellent",
+    ];
+
+    let targetDistance = 0;
+
+    // Function to 'interpolate' between two colors
+    function lerpColor(color1, color2, factor) {
+      const hexToRgb = (hex) => hex.match(/\w\w/g).map((x) => parseInt(x, 16));
+      const rgbToHex = (r, g, b) =>
+        "#" +
+        [r, g, b]
+          .map((x) => Math.round(x).toString(16).padStart(2, "0"))
+          .join("");
+
+      const [r1, g1, b1] = hexToRgb(color1);
+      const [r2, g2, b2] = hexToRgb(color2);
+
+      const r = r1 + factor * (r2 - r1);
+      const g = g1 + factor * (g2 - g1);
+      const b = b1 + factor * (b2 - b1);
+
+      return rgbToHex(r, g, b);
+    }
+
+    // Function to get the correct color from the gradient based on distance
+    function getColorFromGradient(distance) {
+      const red = "#ef4444";
+      const purple = "#8b5cf6";
+      const blue = "#3b82f6";
+      const green = "#22c55e";
+
+      const percentage = distance / containerRadius;
+      let color;
+      if (percentage <= 0.3) {
+        // Red to Purple
+        color = lerpColor(red, purple, percentage / 0.3);
+      } else if (percentage <= 0.5) {
+        // Purple to Blue
+        color = lerpColor(purple, blue, (percentage - 0.3) / 0.2);
+      } else {
+        // Blue to Green
+        color = lerpColor(blue, green, (percentage - 0.5) / 0.5);
+      }
+      return color;
+    }
+
+    // Function to update the mood display and highlight
+    function updateMood(distance) {
+      let percentage = distance / containerRadius;
+      let rating = Math.max(1, Math.min(10, Math.ceil(10 * percentage)));
+
+      display.textContent = rating;
+      input.value = rating;
+      label.textContent = moodLabels[rating - 1];
+
+      const selectedColor = getColorFromGradient(distance);
+
+      highlight.style.borderColor = selectedColor;
+      highlight.style.width = `${distance * 2}px`;
+      highlight.style.height = `${distance * 2}px`;
+    }
+
+    // Animation loop for smoother tracking
+    function animate() {
+      // Smoothly interpolate towards the target distance
+      let currentDistance = parseFloat(highlight.style.width) / 2 || 0;
+      let newDistance =
+        currentDistance + (targetDistance - currentDistance) * 0.2;
+      updateMood(newDistance);
+
+      requestAnimationFrame(animate);
+    }
+
+    container.addEventListener("mousemove", (e) => {
+      if (isLocked) return;
+      const rect = container.getBoundingClientRect();
+      const centerX = rect.left + containerRadius;
+      const centerY = rect.top + containerRadius;
+
+      const dx = e.clientX - centerX;
+      const dy = e.clientY - centerY;
+
+      targetDistance = Math.min(containerRadius, Math.sqrt(dx * dx + dy * dy));
+    });
+
+    container.addEventListener("mouseleave", () => {
+      if (isLocked) return;
+      // Reset to a default state when the mouse leaves
+      targetDistance = 0;
+      display.textContent = "";
+      label.textContent = "";
+    });
+
+    container.addEventListener("click", () => {
+      isLocked = !isLocked;
+      if (!isLocked) {
+        // If unlocked, reset the state
+        targetDistance = 0;
+        display.textContent = "";
+        label.textContent = "";
       }
     });
-    document.body.style.overflow = "auto";
+
+    // Initialize display and start the animation loop
+    display.textContent = "";
+    label.textContent = "";
+    updateMood(0);
+    animate();
   }
-
-  // Event listeners to show the correct pop-up on button click
-  changePasswordBtn.onclick = function () {
-    showPopupForm(passwordPopupForm);
-  };
-
-  changeAccountInfoBtn.onclick = function () {
-    showPopupForm(accountInfoPopupForm);
-  };
-
-  logoutBtn.onclick = function () {
-    showPopupForm(logoutPopupForm);
-  };
-
-  deleteAccountBtn.onclick = function () {
-    showPopupForm(deleteAccountPopupForm);
-  };
-
-  // Event listener for all close buttons to hide the pop-up
-  const closeBtns = document.querySelectorAll(".close-button");
-  closeBtns.forEach((btn) => {
-    btn.onclick = function () {
-      hideAllPopupForms();
-      clearFlashMessages();
-    };
-  });
-
-  // When the user clicks anywhere outside of a popup form, close it
-  window.onclick = function (event) {
-    if (event.target.classList.contains("popup-form")) {
-      hideAllPopupForms();
-      clearFlashMessages();
-    }
-  };
-
-  // Check the URL for a parameter to automatically switch to the correct popup form
-  const urlParamPopupForm = new URLSearchParams(window.location.search);
-  const showForm = urlParamPopupForm.get("show_form");
-
-  if (showForm) {
-    switch (showForm) {
-      case "password":
-        showPopupForm(passwordPopupForm);
-        break;
-      case "account":
-        showPopupForm(accountInfoPopupForm);
-        break;
-      case "logout":
-        showPopupForm(logoutPopupForm);
-        break;
-      case "delete":
-        showPopupForm(deleteAccountPopupForm);
-        break;
-    }
-  }
-
-
-  
 });

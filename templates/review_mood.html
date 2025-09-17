@@ -1,18 +1,42 @@
 {% extends "base.html" %} {% block main %} {% if not user %}
 
 <div class="logout-banner">
-  You're not currently logged in. Any logged workout will be stored temporarily
+  You're not currently logged in. Any logged mood will be stored temporarily
   only. If you wish to keep data logged, please
   <a href="{{ url_for('authentification') }}">log in or create an account</a>
   first.
 </div>
 {% endif %}
-<script id="review_meals">
-  const mealsData = {{ meals | tojson }};
+<script id="review_moods">
+  const moodsData = {{ moods | tojson }};
 </script>
 <section id="stats-overview" class="section">
   <div class="container">
-    <h2 class="review-headers">Meals</h2>
+    <h2 class="review-headers">Moods</h2>
+    <div class="stats-overview-grid">
+      <div class="stats-column">
+        <div class="stats-grid">
+          <div class="stat-box mood-colour">
+            <p>Average Mood</p>
+            <span id="avg-mood" class="stat-value">0</span>
+          </div>
+          <div class="stat-box session-colour">
+            <p>Moods Logged</p>
+            <span id="total-moods" class="stat-value">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="logged-moods" class="section">
+  <div class="container">
+    <h2 class="review-headers">Logged Moods</h2>
+    <div id="moodList" class="data-list">
+      <p class="no-data-message">
+        No moods logged yet. <a href="/log_mood">Log one now!</a>
+      </p>
+    </div>
   </div>
 </section>
 {% endblock %}

@@ -89,7 +89,7 @@ class MoodsLogged(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     date = db.Column(db.Date, nullable=False, unique=True, default=datetime.date.today)
-    mood = db.Column(db.String(50))
+    mood = db.Column(db.Integer, nullable=False)
     notes = db.Column(db.Text)
     # Define a one-to-many relationship with the user.
     user = db.relationship('User', back_populates='moods')
