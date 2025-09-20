@@ -28,16 +28,11 @@ def capitalize_words(s):
 
 
 # Add the filter to the Jinja environment
-
 app.jinja_env.filters['capitalize_words'] = capitalize_words
 
 import routes
 import models
 
-# This is a good place to call db.create_all() to create your tables.
-# You only need to run this once. For development, you can run it
-# directly in your app.py, but for production, you would use a migration
-# tool like Flask-Migrate.
 with app.app_context():
     db.create_all()
 
