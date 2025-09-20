@@ -1,33 +1,27 @@
 from flask import Flask
-import os
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 
-
-# Load environment variables from the .env file
+# Load environment variables from .env file
 load_dotenv()
+
+# Import variables from config.py
+from config import SECRET_KEY, SQLALCHEMY_DATABASE_URI
 
 app = Flask(__name__)
 
-# A secret key is required for using 'sessions' in Flask
-app.secret_key = os.urandom(24)
-
-# Configure the database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('LOCAL_DATABASE_URL')
+# Assign the imported variables to the app's config
+app.config['SECRET_KEY'] = SECRET_KEY
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Initialize the database object
 db = SQLAlchemy(app)
 
-# Function to capitalise first letter of user's name
 def capitalize_words(s):
     if not isinstance(s, str):
         return s
     return ' '.join(word.capitalize() for word in s.split())
 
-
-
-# Add the filter to the Jinja environment
 app.jinja_env.filters['capitalize_words'] = capitalize_words
 
 import routes

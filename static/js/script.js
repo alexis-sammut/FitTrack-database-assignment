@@ -766,7 +766,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <span>${workoutDate}</span>
                 </div>
             </div>
-            <div class="stats-grid">${detailsHtml}</div>
+            <div class="stats-grid">${detailsHtml}</div> 
         `;
         container.appendChild(workoutEl);
       });
