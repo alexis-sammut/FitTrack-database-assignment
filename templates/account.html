@@ -6,7 +6,7 @@
       <ul class="settings-list">
         <li>
           <button id="changePasswordBtn" class="settings-row">
-            <img src="/static/images/password.png" alt="Change Password Icon" />
+            <img src="/static/images/password.png" alt="Change Password Icon">
             <span>Change password</span>
           </button>
         </li>
@@ -15,13 +15,13 @@
             <img
               src="/static/images/account_management.png"
               alt="Change Account Information Icon"
-            />
+           >
             <span>Change account information</span>
           </button>
         </li>
         <li>
           <button id="logoutBtn" class="settings-row">
-            <img src="/static/images/logout.png" alt="Log Out Icon" />
+            <img src="/static/images/logout.png" alt="Log Out Icon">
             <span>Log out</span>
           </button>
         </li>
@@ -30,7 +30,7 @@
             <img
               src="/static/images/delete.png"
               alt="Permanently Delete Account Icon"
-            />
+           >
             <span>Permanently delete account</span>
           </button>
         </li>
@@ -49,7 +49,7 @@
               name="new_password"
               required
               autocomplete="new-password"
-            />
+           >
           </div>
           {% with messages = get_flashed_messages(with_categories=true) %} {% if
           messages %}
@@ -86,7 +86,7 @@
               name="new-email"
               required
               value="{{ user.email }}"
-            />
+           >
           </div>
           {% with messages = get_flashed_messages(with_categories=true) %} {% if
           messages %}

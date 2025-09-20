@@ -1206,8 +1206,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (moodReviewPage) {
-    // The moodsData is now consistently an array from the Flask route
-    const moods = moodsData;
+    // Determine the data source and normalize it to a consistent format
+    let moods = {};
+    if (Array.isArray(moodsData)) {
+      // Data from session for non-logged-in users
+      moodsData.forEach((mood) => {
+        moods[mood.date] = {
+          mood: mood.mood,
+          notes: mood.notes,
+          id: mood.id,
+        };
+      });
+    } else {
+      // Data from database for logged-in users
+      moods = moodsData;
+    }
 
     // Event listener to remove logged moods
     document.getElementById("moodList").addEventListener("click", function (e) {
@@ -1218,7 +1231,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Function to calculate and display the appropriate overview for moods
     function updateMoodStats(moods) {
-      const moodValues = moods.map((mood) => parseInt(mood.mood));
+      const moodValues = Object.values(moods).map((mood) => mood.mood);
       const totalMoods = moodValues.length;
 
       // If all moods are removed, reset the overview to zero
@@ -1229,7 +1242,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Calculate the average mood
-      const totalMoodSum = moodValues.reduce((sum, mood) => sum + mood, 0);
+      const totalMoodSum = moodValues.reduce(
+        (sum, mood) => sum + parseInt(mood),
+        0
+      );
       const avgMood = totalMoodSum / totalMoods;
 
       updateTextContent("avg-mood", avgMood.toFixed(1));
@@ -1241,8 +1257,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const container = document.getElementById("moodList");
       if (!container) return;
 
-      const sortedMoods = moods.sort(
-        (a, b) => new Date(b.date) - new Date(a.date)
+      const sortedMoods = Object.entries(moods).sort(
+        ([dateA], [dateB]) => new Date(dateB) - new Date(dateA)
       );
 
       if (sortedMoods.length === 0) {
@@ -1251,13 +1267,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       container.innerHTML = "";
 
-      sortedMoods.forEach((moodData) => {
+      sortedMoods.forEach(([date, moodData]) => {
         const moodEl = document.createElement("div");
         moodEl.classList.add("logged-item-container");
         moodEl.dataset.id = moodData.id;
         moodEl.dataset.type = "mood";
 
-        const moodDate = new Date(moodData.date).toLocaleDateString("en-GB", {
+        const moodDate = new Date(date).toLocaleDateString("en-GB", {
           day: "2-digit",
           month: "short",
           year: "numeric",

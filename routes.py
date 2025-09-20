@@ -49,7 +49,7 @@ def log_workout():
                 # Add and commit the object to the database
                 db.session.add(new_db_workout)
                 db.session.commit()
-                flash("Workout logged successfully!", "success")
+                print("Workout logged successfully!")
                 
             except Exception as e:
                 db.session.rollback()
@@ -261,8 +261,10 @@ def delete_item():
             if item_to_delete:
                 db.session.delete(item_to_delete)
                 db.session.commit()
+                print('Item deleted.')
                 return jsonify({'success': True, 'message': 'Item deleted.'})
             else:
+                print('Item not found or does not belong to user.')
                 return jsonify({'success': False, 'message': 'Item not found or does not belong to user.'})
 
         else:
@@ -271,8 +273,10 @@ def delete_item():
             if session_key in session:
                 session[session_key] = [item for item in session[session_key] if item['id'] != item_id]
                 session.modified = True
+                print('Item deleted.')
                 return jsonify({'success': True, 'message': 'Item deleted.'})
 
+    print('Invalid request.')
     return jsonify({'success': False, 'message': 'Invalid request.'})
 
 @app.route('/contact', methods=['GET'])
@@ -287,8 +291,14 @@ def log_mood():
     """Renders the Log Mood page and handles mood form submission."""
     
     user = None
+    todays_mood = None
     if 'user_id' in session:
         user = User.query.get(session.get('user_id'))
+        if user:
+            # Check if a mood for today already exists for the user 
+            today = datetime.date.today()
+            todays_mood = MoodsLogged.query.filter_by(user_id=user.id, date=today).first()
+
 
     if request.method == 'POST':
         mood_rating = request.form.get('moodRating')
@@ -302,13 +312,13 @@ def log_mood():
         
                 # Check if a mood for today already exists for the user
                 today = datetime.date.today()
-                existing_mood = MoodsLogged.query.filter_by(user_id=user_id, date=today).first()
+                todays_mood = MoodsLogged.query.filter_by(user_id=user_id, date=today).first()
 
-                if existing_mood:
+                if todays_mood:
                     # If it exists, update the existing entry
-                    existing_mood.mood = mood_rating_int
-                    existing_mood.notes = notes
-                    flash("Mood updated successfully!", "success")
+                    todays_mood.mood = mood_rating_int
+                    todays_mood.notes = notes
+                    print("Mood updated successfully!")
                 else:
                     # If not, create a new entry
                     new_mood = MoodsLogged(
@@ -317,14 +327,14 @@ def log_mood():
                         notes=notes
                     )
                     db.session.add(new_mood)
-                    flash("Mood logged successfully!", "success")
+                    print("Mood logged successfully!")
 
                 db.session.commit()
 
             except Exception as e:
                 db.session.rollback()
                 print(f"Error saving mood to database: {e}")
-                flash("An error occurred. Please try again.", "error")
+                print("An error occurred. Please try again.")
         else:
             # Logic for non-logged-in users
             if 'moods' not in session:
@@ -341,9 +351,8 @@ def log_mood():
             
         return redirect(url_for('review_mood'))
 
-    return render_template('log_mood.html', user=user)
+    return render_template('log_mood.html', user=user, todays_mood=todays_mood)
 
-# routes.py
 @app.route('/review_mood', methods=['GET'])
 def review_mood():
     """Renders the Review Mood page and retrieves logged mood data."""
@@ -523,7 +532,7 @@ def delete_account():
     """Deletes a user's account and logs them out."""
     user_id = session.get('user_id')
     if not user_id:
-        flash("Not logged in.", "error")
+        print("Not logged in.")
         return redirect(url_for('authentification', show_register='true'))
 
     user = User.query.get(user_id)
@@ -531,8 +540,8 @@ def delete_account():
         db.session.delete(user)
         db.session.commit()
         session.clear()
-        flash("Account deleted successfully.", "success")
+        print("Account deleted successfully.")
         return redirect(url_for('index'))
     else:
-        flash('User not found.', "error")
+        print('User not found.')
         return redirect(url_for('account'))
